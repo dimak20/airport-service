@@ -17,17 +17,6 @@ from air_service.models import (
 )
 
 
-
-class AirportSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Airport
-        fields = [
-            "id",
-            "name",
-            "closest_big_city"
-        ]
-
 class CountrySerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -74,6 +63,51 @@ class CityRetrieveSerializer(serializers.ModelSerializer):
             "country",
             "airports"
         ]
+
+
+class AirportSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Airport
+        fields = [
+            "id",
+            "name",
+            "closest_big_city"
+        ]
+
+
+class AirportListSerializer(AirportSerializer):
+    closest_big_city = serializers.SlugRelatedField(
+        read_only=True,
+        many=False,
+        slug_field="name"
+    )
+
+
+class AirportRetrieveSerializer(AirportListSerializer):
+    country = serializers.CharField(
+        source="closest_big_city.country.name",
+        read_only=True
+    )
+    same_city_airports = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Airport
+        fields = [
+            "id",
+            "name",
+            "closest_big_city",
+            "country",
+            "same_city_airports"
+        ]
+
+    def get_same_city_airports(self, obj):
+        return [
+            airport.name for airport in Airport.objects.filter(
+            closest_big_city=obj.id
+        ).exclude(id=obj.id)
+        ]
+
 
 class CountryRetrieveSerializer(serializers.ModelSerializer):
     cities = serializers.SlugRelatedField(
@@ -161,6 +195,8 @@ class AirplaneSerializer(serializers.ModelSerializer):
             "crew",
             "airplane_type"
         ]
+
+
 
 class RouteSerializer(serializers.ModelSerializer):
 

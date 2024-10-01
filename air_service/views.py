@@ -1,4 +1,4 @@
-from django.db.models import Count
+from django.db.models import Count, OuterRef, Subquery
 from django.shortcuts import render
 from rest_framework import viewsets
 
@@ -25,7 +25,7 @@ from air_service.serializers import (
     FlightSerializer,
     TicketSerializer,
     OrderSerializer, CountryRetrieveSerializer, CityListSerializer, CityRetrieveSerializer, CrewListSerializer,
-    CrewRetrieveSerializer, AirplaneTypeRetrieveSerializer
+    CrewRetrieveSerializer, AirplaneTypeRetrieveSerializer, AirportListSerializer, AirportRetrieveSerializer
 )
 
 
@@ -36,6 +36,7 @@ class CountryViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == "retrieve":
             return CountryRetrieveSerializer
+
         return CountrySerializer
 
 class CityViewSet(viewsets.ModelViewSet):
@@ -45,8 +46,10 @@ class CityViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == "list":
             return CityListSerializer
+
         if self.action == "retrieve":
             return CityRetrieveSerializer
+
         return CitySerializer
 
 class CrewViewSet(viewsets.ModelViewSet):
@@ -56,33 +59,54 @@ class CrewViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == "list":
             return CrewListSerializer
+
         if self.action == "retrieve":
             return CrewRetrieveSerializer
+
         return CrewSerializer
 
 class AirplaneTypeViewSet(viewsets.ModelViewSet):
     model = AirplaneType
-    serializer_class = AirplaneTypeSerializer
     queryset = AirplaneType.objects.all()
 
     def get_serializer_class(self):
         if self.action == "retrieve":
             return AirplaneTypeRetrieveSerializer
+
         return AirplaneTypeSerializer
 
     def get_queryset(self):
         queryset = self.queryset
         if self.action == "list" or self.action == "retrieve":
-            queryset = queryset.select_related().annotate(
-                airplane_park=Count("airplanes")
-            )
+            queryset = (
+                queryset.
+                select_related().
+                annotate(
+                    airplane_park=Count("airplanes")
+            ))
+
         return queryset.order_by("name")
 
 
 class AirportViewSet(viewsets.ModelViewSet):
     model = Airport
-    serializer_class = AirportSerializer
     queryset = Airport.objects.all()
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return AirportListSerializer
+
+        if self.action == "retrieve":
+            return AirportRetrieveSerializer
+
+        return AirportSerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+        if self.action == "list" or self.action == "retrieve":
+            return queryset.select_related()
+
+        return queryset
 
 class AirplaneViewSet(viewsets.ModelViewSet):
     model = Airplane
