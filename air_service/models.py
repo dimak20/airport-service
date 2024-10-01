@@ -20,12 +20,12 @@ class Country(models.Model):
             using=None,
             update_fields=None,
     ):
-        self.name = self.name.lower()
+        self.name = " ".join([word.lower().capitalize() for word in self.name.split()])
         self.full_clean()
         return super().save(force_insert, force_update, using, update_fields)
 
     def __str__(self) -> str:
-        return self.name.capitalize()
+        return self.name
 
 
 class City(models.Model):
@@ -35,6 +35,21 @@ class City(models.Model):
     class Meta:
         ordering = ["name", "country__name"]
         verbose_name_plural = "cities"
+
+    def save(
+            self,
+            *args,
+            force_insert=False,
+            force_update=False,
+            using=None,
+            update_fields=None,
+    ):
+        self.name = self.name.lower().capitalize()
+        self.full_clean()
+        return super().save(force_insert, force_update, using, update_fields)
+
+    def __str__(self) -> str:
+        return f"{self.name} ({self.country.name})"
 
 
 class Crew(models.Model):
