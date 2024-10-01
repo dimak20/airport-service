@@ -203,6 +203,14 @@ class AirplaneSerializer(serializers.ModelSerializer):
         ]
 
 
+class AirplaneImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = [
+            "id",
+            "image"
+        ]
+
+
 class AirplaneListSerializer(AirplaneSerializer):
     airplane_type = serializers.SlugRelatedField(
         slug_field="name",
