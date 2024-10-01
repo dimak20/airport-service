@@ -75,7 +75,7 @@ class AirplaneType(models.Model):
             using=None,
             update_fields=None,
     ):
-        self.name = self.name.lower()
+        self.name = self.name.lower().capitalize()
         self.full_clean()
         return super().save(force_insert, force_update, using, update_fields)
 
