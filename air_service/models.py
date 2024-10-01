@@ -121,7 +121,10 @@ class Route(models.Model):
         ordering = ["source"]
 
     def __str__(self) -> str:
-        return f"From {self.source} to {self.destination}"
+        return (
+            f"From {self.source.closest_big_city.name} "
+            f"to {self.destination.closest_big_city.name}"
+        )
 
     @property
     def distance_in_km(self) -> int:

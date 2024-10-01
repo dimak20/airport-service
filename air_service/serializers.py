@@ -287,6 +287,46 @@ class FlightSerializer(serializers.ModelSerializer):
             "arrival_time"
         ]
 
+class FlightListSerializer(FlightSerializer):
+    departure_time = serializers.SerializerMethodField()
+    arrival_time = serializers.SerializerMethodField()
+    route = serializers.StringRelatedField(
+        read_only=True,
+        many=False
+    )
+    airplane = serializers.CharField(
+        read_only=True,
+        source="airplane.name"
+    )
+
+    def get_departure_time(self, obj):
+        return obj.departure_time.strftime("%Y-%m-%d %H:%M")
+
+    def get_arrival_time(self, obj):
+        return obj.arrival_time.strftime("%Y-%m-%d %H:%M")
+
+
+class FlightRetrieveSerializer(FlightListSerializer):
+    route = serializers.SerializerMethodField()
+    airplane = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Flight
+        fields = [
+            "id",
+            "route",
+            "airplane",
+            "departure_time",
+            "arrival_time",
+            "flight_time"
+        ]
+
+    def get_route(self, obj):
+        return f"From {obj.route.source} to {obj.route.destination}"
+
+    def get_airplane(self, obj):
+        return f"{obj.airplane.name} ({obj.airplane.airplane_type.name})"
+
 
 class TicketSerializer(serializers.ModelSerializer):
     class Meta:
