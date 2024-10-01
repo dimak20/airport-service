@@ -23,7 +23,8 @@ from air_service.serializers import (
     RouteSerializer,
     FlightSerializer,
     TicketSerializer,
-    OrderSerializer, CountryRetrieveSerializer
+    OrderSerializer, CountryRetrieveSerializer, CityListSerializer, CityRetrieveSerializer, CrewListSerializer,
+    CrewRetrieveSerializer
 )
 
 
@@ -38,13 +39,25 @@ class CountryViewSet(viewsets.ModelViewSet):
 
 class CityViewSet(viewsets.ModelViewSet):
     model = City
-    serializer_class = CitySerializer
     queryset = City.objects.all()
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return CityListSerializer
+        if self.action == "retrieve":
+            return CityRetrieveSerializer
+        return CitySerializer
 
 class CrewViewSet(viewsets.ModelViewSet):
     model = Crew
-    serializer_class = CrewSerializer
     queryset = Crew.objects.all()
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return CrewListSerializer
+        if self.action == "retrieve":
+            return CrewRetrieveSerializer
+        return CrewSerializer
 
 class AirplaneTypeViewSet(viewsets.ModelViewSet):
     model = AirplaneType

@@ -55,6 +55,26 @@ class CityListSerializer(CitySerializer):
         read_only=True
     )
 
+class CityRetrieveSerializer(serializers.ModelSerializer):
+    country = SlugRelatedField(
+        slug_field="name",
+        many=False,
+        read_only=True
+    )
+    airports = SlugRelatedField(
+        slug_field="name",
+        many=True,
+        read_only=True
+    )
+    class Meta:
+        model = City
+        fields = [
+            "id",
+            "name",
+            "country",
+            "airports"
+        ]
+
 class CountryRetrieveSerializer(serializers.ModelSerializer):
     cities = serializers.SlugRelatedField(
         many=True,
@@ -78,8 +98,28 @@ class CrewSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "first_name",
-            "last_name",
+            "last_name"
+        ]
+class CrewListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Crew
+        fields = [
+            "id",
             "full_name"
+        ]
+class CrewRetrieveSerializer(serializers.ModelSerializer):
+    airplanes = SlugRelatedField(
+        many=True,
+        read_only=True,
+        slug_field="name"
+    )
+    class Meta:
+        model = Crew
+        fields = [
+            "id",
+            "first_name",
+            "last_name",
+            "airplanes"
         ]
 
 class AirplaneTypeSerializer(serializers.ModelSerializer):
@@ -100,6 +140,7 @@ class AirplaneSerializer(serializers.ModelSerializer):
             "name",
             "rows",
             "seats_in_row",
+            "crew",
             "airplane_type"
         ]
 
