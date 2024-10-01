@@ -1,8 +1,11 @@
+import pathlib
+import uuid
 from datetime import datetime
 
 from django.conf import settings
 from django.db import models
 from django.db.models import CASCADE, UniqueConstraint
+from django.utils.text import slugify
 
 
 class Country(models.Model):
@@ -94,12 +97,18 @@ class Airport(models.Model):
         return f"{self.name} (closest city - {self.closest_big_city})"
 
 
+def airplane_image_path(instance: "Airplane", filename: str) -> pathlib.Path:
+    filename = f"{slugify(instance.name)}-{uuid.uuid4()}" + pathlib.Path(filename).suffix
+    return pathlib.Path("upload/airplanes/") / pathlib.Path(filename)
+
+
 class Airplane(models.Model):
     name = models.CharField(max_length=255)
     rows = models.PositiveIntegerField()
     seats_in_row = models.PositiveIntegerField()
     airplane_type = models.ForeignKey(AirplaneType, on_delete=CASCADE, related_name="airplanes")
     crew = models.ManyToManyField(Crew, related_name="airplanes", blank=True)
+    image = models.ImageField(null=True, blank=True, upload_to=airplane_image_path)
 
     def __str__(self) -> str:
         return (
