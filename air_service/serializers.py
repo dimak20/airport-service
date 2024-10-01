@@ -1,3 +1,5 @@
+from typing import List, Dict, Any
+
 from django.db import transaction
 from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
@@ -307,6 +309,18 @@ class FlightListSerializer(FlightSerializer):
         read_only=True,
         source="airplane.name"
     )
+    tickets_available = serializers.IntegerField(read_only=True)
+
+    class Meta:
+        model = Flight
+        fields = [
+            "id",
+            "route",
+            "airplane",
+            "departure_time",
+            "arrival_time",
+            "tickets_available"
+        ]
 
     def get_departure_time(self, obj) -> str:
         return obj.departure_time.strftime("%Y-%m-%d %H:%M")
@@ -318,6 +332,7 @@ class FlightListSerializer(FlightSerializer):
 class FlightRetrieveSerializer(FlightListSerializer):
     route = serializers.SerializerMethodField()
     airplane = serializers.SerializerMethodField()
+    tickets = serializers.SerializerMethodField()
 
     class Meta:
         model = Flight
@@ -327,7 +342,8 @@ class FlightRetrieveSerializer(FlightListSerializer):
             "airplane",
             "departure_time",
             "arrival_time",
-            "flight_time"
+            "flight_time",
+            "tickets"
         ]
 
     def get_route(self, obj) -> str:
@@ -335,6 +351,15 @@ class FlightRetrieveSerializer(FlightListSerializer):
 
     def get_airplane(self, obj) -> str:
         return f"{obj.airplane.name} ({obj.airplane.airplane_type.name})"
+
+    def get_tickets(self, obj) -> list[dict[str, Any]]:
+        return [
+            {
+                "seat": ticket.seat,
+                "row": ticket.row
+            }
+            for ticket in obj.tickets.all()
+        ]
 
 
 class TicketSerializer(serializers.ModelSerializer):
@@ -356,8 +381,10 @@ class TicketSerializer(serializers.ModelSerializer):
             serializers.ValidationError
         )
 
+
 class TicketListSerializer(TicketSerializer):
     flight = FlightListSerializer(many=False, read_only=True)
+
 
 class OrderSerializer(serializers.ModelSerializer):
     tickets = TicketSerializer(many=True, read_only=False, allow_empty=False)
