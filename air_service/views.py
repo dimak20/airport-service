@@ -26,7 +26,7 @@ from air_service.serializers import (
     OrderSerializer, CountryRetrieveSerializer, CityListSerializer, CityRetrieveSerializer, CrewListSerializer,
     CrewRetrieveSerializer, AirplaneTypeRetrieveSerializer, AirportListSerializer, AirportRetrieveSerializer,
     AirplaneListSerializer, AirplaneRetrieveSerializer, RouteListSerializer, RouteRetrieveSerializer,
-    FlightListSerializer, FlightRetrieveSerializer
+    FlightListSerializer, FlightRetrieveSerializer, TicketListSerializer
 )
 
 
@@ -203,8 +203,34 @@ class TicketViewSet(viewsets.ModelViewSet):
     serializer_class = TicketSerializer
     queryset = Ticket.objects.all()
 
+    def get_queryset(self):
+        queryset = self.queryset.filter(order__user=self.request.user)
+        if self.action == "list":
+            return queryset.select_related()
+
+        return queryset
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return TicketListSerializer
+
+        return TicketSerializer
 
 class OrderViewSet(viewsets.ModelViewSet):
     model = Order
     serializer_class = OrderSerializer
     queryset = Order.objects.all()
+
+    def get_queryset(self):
+        queryset = self.queryset.filter(user=self.request.user)
+        if self.action == "list":
+            return queryset.prefetch_related(
+                "tickets__flight__route__source",
+                "tickets__flight__route__destination"
+            )
+
+        return queryset
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
