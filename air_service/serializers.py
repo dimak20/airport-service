@@ -99,7 +99,7 @@ class AirportRetrieveSerializer(AirportListSerializer):
             "same_city_airports"
         ]
 
-    def get_same_city_airports(self, obj):
+    def get_same_city_airports(self, obj) -> list[str]:
         return [
             airport.name for airport in Airport.objects.filter(
                 closest_big_city=obj.id
@@ -242,13 +242,13 @@ class RouteListSerializer(RouteSerializer):
     source = serializers.SerializerMethodField()
     destination = serializers.SerializerMethodField()
 
-    def get_source(self, obj):
+    def get_source(self, obj) -> str:
         return (
             f"{obj.source.name} "
             f"({obj.source.closest_big_city.name})"
         )
 
-    def get_destination(self, obj):
+    def get_destination(self, obj) -> str:
         return (
             f"{obj.destination.name} "
             f"({obj.destination.closest_big_city.name})"
@@ -287,6 +287,14 @@ class FlightSerializer(serializers.ModelSerializer):
             "arrival_time"
         ]
 
+    def validate(self, attrs):
+        Flight.validate_time(
+            attrs["departure_time"],
+            attrs["arrival_time"],
+            serializers.ValidationError
+        )
+
+
 class FlightListSerializer(FlightSerializer):
     departure_time = serializers.SerializerMethodField()
     arrival_time = serializers.SerializerMethodField()
@@ -299,10 +307,10 @@ class FlightListSerializer(FlightSerializer):
         source="airplane.name"
     )
 
-    def get_departure_time(self, obj):
+    def get_departure_time(self, obj) -> str:
         return obj.departure_time.strftime("%Y-%m-%d %H:%M")
 
-    def get_arrival_time(self, obj):
+    def get_arrival_time(self, obj) -> str:
         return obj.arrival_time.strftime("%Y-%m-%d %H:%M")
 
 
@@ -321,10 +329,10 @@ class FlightRetrieveSerializer(FlightListSerializer):
             "flight_time"
         ]
 
-    def get_route(self, obj):
+    def get_route(self, obj) -> str:
         return f"From {obj.route.source} to {obj.route.destination}"
 
-    def get_airplane(self, obj):
+    def get_airplane(self, obj) -> str:
         return f"{obj.airplane.name} ({obj.airplane.airplane_type.name})"
 
 
@@ -338,6 +346,15 @@ class TicketSerializer(serializers.ModelSerializer):
             "flight",
             "order"
         ]
+
+    def validate(self, attrs):
+        Ticket.validate_seat_row(
+            attrs["seat"],
+            attrs["row"],
+            attrs["flight"].airplane.seats_in_row,
+            attrs["flight"].airplane.rows,
+            serializers.ValidationError
+        )
 
 
 class OrderSerializer(serializers.ModelSerializer):
