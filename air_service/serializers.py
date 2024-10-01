@@ -362,6 +362,19 @@ class FlightRetrieveSerializer(FlightListSerializer):
         ]
 
 
+class FlightDetailSerializer(FlightRetrieveSerializer):
+    class Meta:
+        model = Flight
+        fields = [
+            "id",
+            "route",
+            "airplane",
+            "departure_time",
+            "arrival_time",
+            "flight_time",
+        ]
+
+
 class TicketSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket
@@ -380,6 +393,7 @@ class TicketSerializer(serializers.ModelSerializer):
             attrs["flight"].airplane.rows,
             serializers.ValidationError
         )
+        return attrs
 
 
 class TicketListSerializer(TicketSerializer):
@@ -387,7 +401,7 @@ class TicketListSerializer(TicketSerializer):
 
 
 class TicketRetrieveSerializer(TicketSerializer):
-    flight = FlightRetrieveSerializer(many=False, read_only=True)
+    flight = FlightDetailSerializer(many=False, read_only=True)
 
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -417,3 +431,7 @@ class OrderListSerializer(OrderSerializer):
 
     def get_created_at(self, obj) -> str:
         return obj.created_at.strftime("%Y-%m-%d %H:%M:%S")
+
+
+class OrderRetrieveSerializer(OrderListSerializer):
+    tickets = TicketRetrieveSerializer(many=True, read_only=True)
