@@ -213,7 +213,7 @@ class TicketViewSet(viewsets.ModelViewSet):
     model = Ticket
     serializer_class = TicketSerializer
     queryset = Ticket.objects.all()
-    permission_classes = [IsAuthenticated,]
+    permission_classes = [IsAuthenticated, ]
 
     def get_queryset(self):
         queryset = self.queryset.filter(order__user=self.request.user)
@@ -236,7 +236,7 @@ class OrderViewSet(viewsets.ModelViewSet):
     model = Order
     serializer_class = OrderSerializer
     queryset = Order.objects.all()
-    permission_classes = [IsAuthenticated,]
+    permission_classes = [IsAuthenticated, ]
 
     def get_queryset(self):
         queryset = self.queryset.filter(user=self.request.user)

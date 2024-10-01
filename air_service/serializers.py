@@ -216,6 +216,7 @@ class AirplaneRetrieveSerializer(AirplaneListSerializer):
         read_only=True,
         many=True
     )
+
     class Meta:
         model = Airplane
         fields = [
