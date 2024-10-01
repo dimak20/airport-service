@@ -39,6 +39,13 @@ class CountryViewSet(viewsets.ModelViewSet):
 
         return CountrySerializer
 
+    def get_queryset(self):
+        queryset = self.queryset
+        if self.action in ["list", "retrieve"]:
+            return queryset.select_related()
+
+        return queryset
+
 class CityViewSet(viewsets.ModelViewSet):
     model = City
     queryset = City.objects.all()
@@ -52,6 +59,14 @@ class CityViewSet(viewsets.ModelViewSet):
 
         return CitySerializer
 
+    def get_queryset(self):
+        queryset = self.queryset
+        if self.action in ["list", "retrieve"]:
+            return queryset.select_related()
+
+        return queryset
+
+
 class CrewViewSet(viewsets.ModelViewSet):
     model = Crew
     queryset = Crew.objects.all()
@@ -64,6 +79,13 @@ class CrewViewSet(viewsets.ModelViewSet):
             return CrewRetrieveSerializer
 
         return CrewSerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+        if self.action in ["list", "retrieve"]:
+            return queryset.prefetch_related("airplanes")
+
+        return queryset
 
 class AirplaneTypeViewSet(viewsets.ModelViewSet):
     model = AirplaneType
