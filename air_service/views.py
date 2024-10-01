@@ -1,3 +1,4 @@
+from django.db.models import Count
 from django.shortcuts import render
 from rest_framework import viewsets
 
@@ -24,7 +25,7 @@ from air_service.serializers import (
     FlightSerializer,
     TicketSerializer,
     OrderSerializer, CountryRetrieveSerializer, CityListSerializer, CityRetrieveSerializer, CrewListSerializer,
-    CrewRetrieveSerializer
+    CrewRetrieveSerializer, AirplaneTypeRetrieveSerializer
 )
 
 
@@ -63,6 +64,20 @@ class AirplaneTypeViewSet(viewsets.ModelViewSet):
     model = AirplaneType
     serializer_class = AirplaneTypeSerializer
     queryset = AirplaneType.objects.all()
+
+    def get_serializer_class(self):
+        if self.action == "retrieve":
+            return AirplaneTypeRetrieveSerializer
+        return AirplaneTypeSerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+        if self.action == "list" or self.action == "retrieve":
+            queryset = queryset.select_related().annotate(
+                airplane_park=Count("airplanes")
+            )
+        return queryset.order_by("name")
+
 
 class AirportViewSet(viewsets.ModelViewSet):
     model = Airport

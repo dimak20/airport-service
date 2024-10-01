@@ -123,13 +123,31 @@ class CrewRetrieveSerializer(serializers.ModelSerializer):
         ]
 
 class AirplaneTypeSerializer(serializers.ModelSerializer):
-
+    airplane_park = serializers.IntegerField(read_only=True)
     class Meta:
         model = AirplaneType
         fields = [
             "id",
-            "name"
+            "name",
+            "airplane_park"
         ]
+
+
+class AirplaneTypeRetrieveSerializer(AirplaneTypeSerializer):
+    airplanes = serializers.SlugRelatedField(
+        many=True,
+        read_only=True,
+        slug_field="name"
+    )
+    class Meta:
+        model = AirplaneType
+        fields = [
+            "id",
+            "name",
+            "airplane_park",
+            "airplanes"
+        ]
+
 
 class AirplaneSerializer(serializers.ModelSerializer):
 
