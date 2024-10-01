@@ -23,14 +23,18 @@ from air_service.serializers import (
     RouteSerializer,
     FlightSerializer,
     TicketSerializer,
-    OrderSerializer
+    OrderSerializer, CountryRetrieveSerializer
 )
 
 
 class CountryViewSet(viewsets.ModelViewSet):
     model = Country
-    serializer_class = CountrySerializer
     queryset = Country.objects.all()
+
+    def get_serializer_class(self):
+        if self.action == "retrieve":
+            return CountryRetrieveSerializer
+        return CountrySerializer
 
 class CityViewSet(viewsets.ModelViewSet):
     model = City
