@@ -107,6 +107,10 @@ class Airplane(models.Model):
             f"Rows: {self.rows}. Seats_in_row: {self.seats_in_row}"
         )
 
+    @property
+    def capacity(self):
+        return int(self.rows * self.seats_in_row)
+
 
 class Route(models.Model):
     source = models.ForeignKey(Airport, on_delete=CASCADE, related_name="source_routes")
