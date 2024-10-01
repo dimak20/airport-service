@@ -1,7 +1,5 @@
-from django.db import transaction
 from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
-from rest_framework.validators import UniqueTogetherValidator
 
 from air_service.models import (
     Airport,
@@ -18,7 +16,6 @@ from air_service.models import (
 
 
 class CountrySerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Country
         fields = [
@@ -28,7 +25,6 @@ class CountrySerializer(serializers.ModelSerializer):
 
 
 class CitySerializer(serializers.ModelSerializer):
-
     class Meta:
         model = City
         fields = [
@@ -37,12 +33,14 @@ class CitySerializer(serializers.ModelSerializer):
             "country"
         ]
 
+
 class CityListSerializer(CitySerializer):
     country = SlugRelatedField(
         slug_field="name",
         many=False,
         read_only=True
     )
+
 
 class CityRetrieveSerializer(serializers.ModelSerializer):
     country = SlugRelatedField(
@@ -55,6 +53,7 @@ class CityRetrieveSerializer(serializers.ModelSerializer):
         many=True,
         read_only=True
     )
+
     class Meta:
         model = City
         fields = [
@@ -66,7 +65,6 @@ class CityRetrieveSerializer(serializers.ModelSerializer):
 
 
 class AirportSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Airport
         fields = [
@@ -104,8 +102,8 @@ class AirportRetrieveSerializer(AirportListSerializer):
     def get_same_city_airports(self, obj):
         return [
             airport.name for airport in Airport.objects.filter(
-            closest_big_city=obj.id
-        ).exclude(id=obj.id)
+                closest_big_city=obj.id
+            ).exclude(id=obj.id)
         ]
 
 
@@ -115,6 +113,7 @@ class CountryRetrieveSerializer(serializers.ModelSerializer):
         slug_field="name",
         read_only=True
     )
+
     class Meta:
         model = Country
         fields = [
@@ -124,9 +123,7 @@ class CountryRetrieveSerializer(serializers.ModelSerializer):
         ]
 
 
-
 class CrewSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Crew
         fields = [
@@ -134,6 +131,8 @@ class CrewSerializer(serializers.ModelSerializer):
             "first_name",
             "last_name"
         ]
+
+
 class CrewListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Crew
@@ -141,12 +140,15 @@ class CrewListSerializer(serializers.ModelSerializer):
             "id",
             "full_name"
         ]
+
+
 class CrewRetrieveSerializer(serializers.ModelSerializer):
     airplanes = SlugRelatedField(
         many=True,
         read_only=True,
         slug_field="name"
     )
+
     class Meta:
         model = Crew
         fields = [
@@ -156,8 +158,10 @@ class CrewRetrieveSerializer(serializers.ModelSerializer):
             "airplanes"
         ]
 
+
 class AirplaneTypeSerializer(serializers.ModelSerializer):
     airplane_park = serializers.IntegerField(read_only=True)
+
     class Meta:
         model = AirplaneType
         fields = [
@@ -173,6 +177,7 @@ class AirplaneTypeRetrieveSerializer(AirplaneTypeSerializer):
         read_only=True,
         slug_field="name"
     )
+
     class Meta:
         model = AirplaneType
         fields = [
@@ -184,7 +189,6 @@ class AirplaneTypeRetrieveSerializer(AirplaneTypeSerializer):
 
 
 class AirplaneSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Airplane
         fields = [
@@ -208,6 +212,7 @@ class AirplaneListSerializer(AirplaneSerializer):
         many=False
     )
 
+
 class AirplaneRetrieveSerializer(AirplaneListSerializer):
     class Meta:
         model = Airplane
@@ -221,8 +226,8 @@ class AirplaneRetrieveSerializer(AirplaneListSerializer):
             "crew"
         ]
 
-class RouteSerializer(serializers.ModelSerializer):
 
+class RouteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Route
         fields = [
@@ -232,8 +237,46 @@ class RouteSerializer(serializers.ModelSerializer):
             "distance"
         ]
 
-class FlightSerializer(serializers.ModelSerializer):
 
+class RouteListSerializer(RouteSerializer):
+    source = serializers.SerializerMethodField()
+    destination = serializers.SerializerMethodField()
+
+    def get_source(self, obj):
+        return (
+            f"{obj.source.name} "
+            f"({obj.source.closest_big_city.name})"
+        )
+
+    def get_destination(self, obj):
+        return (
+            f"{obj.destination.name} "
+            f"({obj.destination.closest_big_city.name})"
+        )
+
+
+class RouteRetrieveSerializer(RouteListSerializer):
+    source = serializers.StringRelatedField(
+        many=False,
+        read_only=True,
+    )
+    destination = serializers.StringRelatedField(
+        many=False,
+        read_only=True,
+    )
+
+    class Meta:
+        model = Route
+        fields = [
+            "id",
+            "source",
+            "destination",
+            "distance_in_km",
+            "distance_in_nm"
+        ]
+
+
+class FlightSerializer(serializers.ModelSerializer):
     class Meta:
         model = Flight
         fields = [
@@ -244,8 +287,8 @@ class FlightSerializer(serializers.ModelSerializer):
             "arrival_time"
         ]
 
-class TicketSerializer(serializers.ModelSerializer):
 
+class TicketSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket
         fields = [
@@ -256,8 +299,8 @@ class TicketSerializer(serializers.ModelSerializer):
             "order"
         ]
 
-class OrderSerializer(serializers.ModelSerializer):
 
+class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = [
