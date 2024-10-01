@@ -99,6 +99,7 @@ class Airplane(models.Model):
     rows = models.PositiveIntegerField()
     seats_in_row = models.PositiveIntegerField()
     airplane_type = models.ForeignKey(AirplaneType, on_delete=CASCADE, related_name="airplanes")
+    crew = models.ManyToManyField(Crew, related_name="airplanes", blank=True)
 
     def __str__(self) -> str:
         return (
