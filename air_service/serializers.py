@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+from typing import Any
 
 from django.db import transaction
 from rest_framework import serializers
@@ -386,8 +386,13 @@ class TicketListSerializer(TicketSerializer):
     flight = FlightListSerializer(many=False, read_only=True)
 
 
+class TicketRetrieveSerializer(TicketSerializer):
+    flight = FlightRetrieveSerializer(many=False, read_only=True)
+
+
 class OrderSerializer(serializers.ModelSerializer):
     tickets = TicketSerializer(many=True, read_only=False, allow_empty=False)
+
     class Meta:
         model = Order
         fields = [
@@ -404,6 +409,7 @@ class OrderSerializer(serializers.ModelSerializer):
                 Ticket.objects.create(order=order, **ticket_data)
 
             return order
+
 
 class OrderListSerializer(OrderSerializer):
     tickets = TicketListSerializer(many=True, read_only=True)

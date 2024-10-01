@@ -26,7 +26,7 @@ from air_service.serializers import (
     OrderSerializer, CountryRetrieveSerializer, CityListSerializer, CityRetrieveSerializer, CrewListSerializer,
     CrewRetrieveSerializer, AirplaneTypeRetrieveSerializer, AirportListSerializer, AirportRetrieveSerializer,
     AirplaneListSerializer, AirplaneRetrieveSerializer, RouteListSerializer, RouteRetrieveSerializer,
-    FlightListSerializer, FlightRetrieveSerializer, TicketListSerializer, OrderListSerializer
+    FlightListSerializer, FlightRetrieveSerializer, TicketListSerializer, OrderListSerializer, TicketRetrieveSerializer
 )
 
 
@@ -222,6 +222,9 @@ class TicketViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == "list":
             return TicketListSerializer
+
+        if self.action == "retrieve":
+            return TicketRetrieveSerializer
 
         return TicketSerializer
 
