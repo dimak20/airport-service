@@ -199,16 +199,10 @@ class AirplaneSerializer(serializers.ModelSerializer):
             "name",
             "capacity",
             "airplane_type",
-            "crew"
         ]
 
 
 class AirplaneListSerializer(AirplaneSerializer):
-    crew = serializers.SlugRelatedField(
-        slug_field="full_name",
-        read_only=True,
-        many=True
-    )
     airplane_type = serializers.SlugRelatedField(
         slug_field="name",
         read_only=True,
@@ -217,6 +211,11 @@ class AirplaneListSerializer(AirplaneSerializer):
 
 
 class AirplaneRetrieveSerializer(AirplaneListSerializer):
+    crew = serializers.SlugRelatedField(
+        slug_field="full_name",
+        read_only=True,
+        many=True
+    )
     class Meta:
         model = Airplane
         fields = [
