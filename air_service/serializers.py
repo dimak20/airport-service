@@ -1,5 +1,6 @@
 from django.db import transaction
 from rest_framework import serializers
+from rest_framework.relations import SlugRelatedField
 from rest_framework.validators import UniqueTogetherValidator
 
 from air_service.models import (
@@ -15,14 +16,7 @@ from air_service.models import (
     Order
 )
 
-class CountrySerializer(serializers.ModelSerializer):
 
-    class Meta:
-        model = Country
-        fields = [
-            "id",
-            "name"
-        ]
 
 class AirportSerializer(serializers.ModelSerializer):
 
@@ -34,6 +28,16 @@ class AirportSerializer(serializers.ModelSerializer):
             "closest_big_city"
         ]
 
+class CountrySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Country
+        fields = [
+            "id",
+            "name"
+        ]
+
+
 class CitySerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -43,6 +47,29 @@ class CitySerializer(serializers.ModelSerializer):
             "name",
             "country"
         ]
+
+class CityListSerializer(CitySerializer):
+    country = SlugRelatedField(
+        slug_field="name",
+        many=False,
+        read_only=True
+    )
+
+class CountryRetrieveSerializer(serializers.ModelSerializer):
+    cities = serializers.SlugRelatedField(
+        many=True,
+        slug_field="name",
+        read_only=True
+    )
+    class Meta:
+        model = Country
+        fields = [
+            "id",
+            "name",
+            "cities"
+        ]
+
+
 
 class CrewSerializer(serializers.ModelSerializer):
 
