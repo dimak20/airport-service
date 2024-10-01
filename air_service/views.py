@@ -26,7 +26,7 @@ from air_service.serializers import (
     OrderSerializer, CountryRetrieveSerializer, CityListSerializer, CityRetrieveSerializer, CrewListSerializer,
     CrewRetrieveSerializer, AirplaneTypeRetrieveSerializer, AirportListSerializer, AirportRetrieveSerializer,
     AirplaneListSerializer, AirplaneRetrieveSerializer, RouteListSerializer, RouteRetrieveSerializer,
-    FlightListSerializer, FlightRetrieveSerializer, TicketListSerializer
+    FlightListSerializer, FlightRetrieveSerializer, TicketListSerializer, OrderListSerializer
 )
 
 
@@ -230,6 +230,12 @@ class OrderViewSet(viewsets.ModelViewSet):
             )
 
         return queryset
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return OrderListSerializer
+
+        return OrderSerializer
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
