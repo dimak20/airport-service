@@ -4,7 +4,7 @@ from rest_framework.routers import DefaultRouter
 from air_service.views import CountryViewSet, CityViewSet, CrewViewSet, AirplaneViewSet, AirportViewSet, RouteViewSet, \
     FlightViewSet, TicketViewSet, OrderViewSet, AirplaneTypeViewSet
 
-app_name = "air_service"
+app_name = "air-service"
 
 router = DefaultRouter()
 router.register("countries", CountryViewSet)
