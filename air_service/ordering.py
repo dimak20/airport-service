@@ -3,7 +3,7 @@ from rest_framework.request import Request
 
 class AirServiceOrdering:
     ordering_param = "ordering"
-    default_param = "-pk"
+    default_param = "pk"
 
     @classmethod
     def get_ordering_fields(cls, request: Request, fields: list[str]) -> list[str]:
