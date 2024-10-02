@@ -54,7 +54,7 @@ class CountryFilter(django_filters.FilterSet):
 
 
 class CityFilter(django_filters.FilterSet):
-    name = django_filters.CharFilter(field_name="name", lookup_expr="icontains")
+    city_name = django_filters.CharFilter(field_name="name", lookup_expr="icontains")
     country_name = django_filters.CharFilter(
         field_name="country__name", lookup_expr="icontains"
     )
