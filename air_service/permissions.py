@@ -3,7 +3,7 @@ from rest_framework.permissions import BasePermission, SAFE_METHODS
 
 class IsAdminAllORIsAuthenticatedOrReadOnly(BasePermission):
     """
-    Provide full permission to admin user or permissions if safe methods
+    Provides full permission to admin user or permissions if safe methods
     """
 
     def has_permission(self, request, view):
