@@ -42,7 +42,7 @@ from air_service.serializers import (
 class CountryViewSet(viewsets.ModelViewSet):
     model = Country
     queryset = Country.objects.all()
-    ordering_fields = ("id", "name")
+    ordering_fields = ("pk", "name")
     filter_backends = (DjangoFilterBackend,)
     filterset_class = CountryFilter
 
@@ -78,7 +78,7 @@ class CountryViewSet(viewsets.ModelViewSet):
 class CityViewSet(viewsets.ModelViewSet):
     model = City
     queryset = City.objects.all()
-    ordering_fields = ("id", "name")
+    ordering_fields = ("pk", "name")
     filter_backends = (DjangoFilterBackend,)
     filterset_class = CityFilter
 
@@ -94,16 +94,30 @@ class CityViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset
         if self.action in ["list", "retrieve"]:
-            return queryset.select_related()
+            queryset = queryset.select_related()
 
-        return queryset
+        ordering_fields = AirServiceOrdering.get_ordering_fields(self.request, list(self.ordering_fields))
 
+        return queryset.order_by(*ordering_fields)
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name='ordering',
+                type=str,
+                description='Comma-separated list of fields to order by. Prefix with `-` to sort in descending order.',
+                required=False,
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
 
 class CrewViewSet(viewsets.ModelViewSet):
     model = Crew
     queryset = Crew.objects.all()
-    ordering_fields = ("id", "first_name", "last_name")
+    ordering_fields = ("pk", "first_name", "last_name")
     filter_backends = (DjangoFilterBackend,)
     filterset_class = CrewFilter
 
@@ -119,15 +133,30 @@ class CrewViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset
         if self.action in ["list", "retrieve"]:
-            return queryset.prefetch_related("airplanes")
+            queryset = queryset.prefetch_related("airplanes")
 
-        return queryset
+        ordering_fields = AirServiceOrdering.get_ordering_fields(self.request, list(self.ordering_fields))
+
+        return queryset.order_by(*ordering_fields)
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name='ordering',
+                type=str,
+                description='Comma-separated list of fields to order by. Prefix with `-` to sort in descending order.',
+                required=False,
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
 
 class AirplaneTypeViewSet(viewsets.ModelViewSet):
     model = AirplaneType
     queryset = AirplaneType.objects.all()
-    ordering_fields = ("id", "name")
+    ordering_fields = ("pk", "name")
     filter_backends = (DjangoFilterBackend,)
     filterset_class = AirplaneTypeFilter
 
@@ -147,13 +176,28 @@ class AirplaneTypeViewSet(viewsets.ModelViewSet):
                     airplane_park=Count("airplanes")
                 ))
 
-        return queryset.order_by("name")
+        ordering_fields = AirServiceOrdering.get_ordering_fields(self.request, list(self.ordering_fields))
+
+        return queryset.order_by(*ordering_fields)
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name='ordering',
+                type=str,
+                description='Comma-separated list of fields to order by. Prefix with `-` to sort in descending order.',
+                required=False,
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
 
 class AirportViewSet(viewsets.ModelViewSet):
     model = Airport
     queryset = Airport.objects.all()
-    ordering_fields = ("id", "name")
+    ordering_fields = ("pk", "name")
     filter_backends = (DjangoFilterBackend,)
     filterset_class = AirportFilter
 
@@ -169,15 +213,30 @@ class AirportViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset
         if self.action == "list" or self.action == "retrieve":
-            return queryset.select_related()
+            queryset = queryset.select_related()
 
-        return queryset
+        ordering_fields = AirServiceOrdering.get_ordering_fields(self.request, list(self.ordering_fields))
+
+        return queryset.order_by(*ordering_fields)
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name='ordering',
+                type=str,
+                description='Comma-separated list of fields to order by. Prefix with `-` to sort in descending order.',
+                required=False,
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
 
 class AirplaneViewSet(viewsets.ModelViewSet):
     model = Airplane
     queryset = Airplane.objects.all()
-    ordering_fields = ("id", "name")
+    ordering_fields = ("pk", "name")
     filter_backends = (DjangoFilterBackend,)
     filterset_class = AirplaneFilter
 
@@ -196,9 +255,11 @@ class AirplaneViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset
         if self.action in ["list", "retrieve"]:
-            return queryset.select_related().prefetch_related("crew")
+            queryset = queryset.select_related().prefetch_related("crew")
 
-        return queryset
+        ordering_fields = AirServiceOrdering.get_ordering_fields(self.request, list(self.ordering_fields))
+
+        return queryset.order_by(*ordering_fields)
 
     @action(
         methods=["POSt"],
@@ -212,11 +273,24 @@ class AirplaneViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name='ordering',
+                type=str,
+                description='Comma-separated list of fields to order by. Prefix with `-` to sort in descending order.',
+                required=False,
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
 
 class RouteViewSet(viewsets.ModelViewSet):
     model = Route
     queryset = Route.objects.all()
-    ordering_fields = ("distance",)
+    ordering_fields = ("pk", "distance")
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RouteFilter
 
@@ -233,15 +307,30 @@ class RouteViewSet(viewsets.ModelViewSet):
         queryset = self.queryset
 
         if self.action in ["list", "retrieve"]:
-            return queryset.select_related()
+            queryset = queryset.select_related()
 
-        return queryset
+        ordering_fields = AirServiceOrdering.get_ordering_fields(self.request, list(self.ordering_fields))
+
+        return queryset.order_by(*ordering_fields)
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name='ordering',
+                type=str,
+                description='Comma-separated list of fields to order by. Prefix with `-` to sort in descending order.',
+                required=False,
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
 
 class FlightViewSet(viewsets.ModelViewSet):
     model = Flight
     queryset = Flight.objects.all()
-    ordering_fields = ("departure_time", "arrival_time")
+    ordering_fields = ("pk", "departure_time", "arrival_time")
     filter_backends = (DjangoFilterBackend,)
     filterset_class = FlightFilter
 
@@ -257,7 +346,7 @@ class FlightViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset
         if self.action in ["list", "retrieve"]:
-            return (
+            queryset = (
                 queryset.
                 select_related().
                 annotate(
@@ -268,21 +357,39 @@ class FlightViewSet(viewsets.ModelViewSet):
                 )
             )
 
-        return queryset
+        ordering_fields = AirServiceOrdering.get_ordering_fields(self.request, list(self.ordering_fields))
+
+        return queryset.order_by(*ordering_fields)
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name='ordering',
+                type=str,
+                description='Comma-separated list of fields to order by. Prefix with `-` to sort in descending order.',
+                required=False,
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
 
 class TicketViewSet(viewsets.ModelViewSet):
     model = Ticket
     serializer_class = TicketSerializer
+    ordering_fields = ("pk",)
     queryset = Ticket.objects.all()
     permission_classes = [IsAuthenticated, ]
 
     def get_queryset(self):
         queryset = self.queryset.filter(order__user=self.request.user)
         if self.action == "list":
-            return queryset.select_related()
+            queryset = queryset.select_related()
 
-        return queryset
+        ordering_fields = AirServiceOrdering.get_ordering_fields(self.request, list(self.ordering_fields))
+
+        return queryset.order_by(*ordering_fields)
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -293,22 +400,38 @@ class TicketViewSet(viewsets.ModelViewSet):
 
         return TicketSerializer
 
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name='ordering',
+                type=str,
+                description='Comma-separated list of fields to order by. Prefix with `-` to sort in descending order.',
+                required=False,
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
 
 class OrderViewSet(viewsets.ModelViewSet):
     model = Order
     serializer_class = OrderSerializer
+    ordering_fields = ("pk",)
     queryset = Order.objects.all()
     permission_classes = [IsAuthenticated, ]
 
     def get_queryset(self):
         queryset = self.queryset.filter(user=self.request.user)
         if self.action == "list":
-            return queryset.prefetch_related(
+            queryset = queryset.prefetch_related(
                 "tickets__flight__route__source",
                 "tickets__flight__route__destination"
             )
 
-        return queryset
+        ordering_fields = AirServiceOrdering.get_ordering_fields(self.request, list(self.ordering_fields))
+
+        return queryset.order_by(*ordering_fields)
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -321,3 +444,16 @@ class OrderViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name='ordering',
+                type=str,
+                description='Comma-separated list of fields to order by. Prefix with `-` to sort in descending order.',
+                required=False,
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
