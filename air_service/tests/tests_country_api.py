@@ -9,7 +9,7 @@ from air_service.serializers import CountrySerializer, CountryRetrieveSerializer
 
 COUNTRY_URL = reverse("air-service:country-list")
 def detail_url(country_id):
-    return reverse("air-service:country-detail", args=(str(bus_id),))
+    return reverse("air-service:country-detail", args=(str(country_id),))
 
 
 def sample_country(**params) -> Country:

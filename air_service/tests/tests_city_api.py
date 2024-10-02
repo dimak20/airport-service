@@ -9,8 +9,8 @@ from air_service.serializers import CitySerializer, CityListSerializer, CityRetr
 
 CITY_URL = reverse("air-service:city-list")
 
-def detail_url(bus_id):
-    return reverse("air-service:city-detail", args=(str(bus_id),))
+def detail_url(city_id):
+    return reverse("air-service:city-detail", args=(str(city_id),))
 
 
 
