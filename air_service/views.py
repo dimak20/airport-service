@@ -1,5 +1,6 @@
 from django.db.models import Count, F
 from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
@@ -19,6 +20,7 @@ from air_service.models import (
     Ticket,
     Order
 )
+from air_service.ordering import AirServiceOrdering
 from air_service.serializers import (
     CountrySerializer,
     CitySerializer,
@@ -53,9 +55,24 @@ class CountryViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset
         if self.action in ["list", "retrieve"]:
-            return queryset.select_related()
+            queryset = queryset.select_related()
 
-        return queryset
+        ordering_fields = AirServiceOrdering.get_ordering_fields(self.request, list(self.ordering_fields))
+
+        return queryset.order_by(*ordering_fields)
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name='ordering',
+                type=str,
+                description='Comma-separated list of fields to order by. Prefix with `-` to sort in descending order.',
+                required=False,
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
 
 class CityViewSet(viewsets.ModelViewSet):
@@ -80,6 +97,7 @@ class CityViewSet(viewsets.ModelViewSet):
             return queryset.select_related()
 
         return queryset
+
 
 
 class CrewViewSet(viewsets.ModelViewSet):
