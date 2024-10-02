@@ -1,9 +1,12 @@
 from django.db.models import Count, F
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 
+from air_service.filters import RouteFilter, FlightFilter, CountryFilter, CityFilter, CrewFilter, AirplaneTypeFilter, \
+    AirportFilter, AirplaneFilter
 from air_service.models import (
     Country,
     City,
@@ -37,6 +40,9 @@ from air_service.serializers import (
 class CountryViewSet(viewsets.ModelViewSet):
     model = Country
     queryset = Country.objects.all()
+    ordering_fields = ("id", "name")
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = CountryFilter
 
     def get_serializer_class(self):
         if self.action == "retrieve":
@@ -55,6 +61,9 @@ class CountryViewSet(viewsets.ModelViewSet):
 class CityViewSet(viewsets.ModelViewSet):
     model = City
     queryset = City.objects.all()
+    ordering_fields = ("id", "name")
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = CityFilter
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -76,6 +85,9 @@ class CityViewSet(viewsets.ModelViewSet):
 class CrewViewSet(viewsets.ModelViewSet):
     model = Crew
     queryset = Crew.objects.all()
+    ordering_fields = ("id", "first_name", "last_name")
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = CrewFilter
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -97,6 +109,9 @@ class CrewViewSet(viewsets.ModelViewSet):
 class AirplaneTypeViewSet(viewsets.ModelViewSet):
     model = AirplaneType
     queryset = AirplaneType.objects.all()
+    ordering_fields = ("id", "name")
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = AirplaneTypeFilter
 
     def get_serializer_class(self):
         if self.action == "retrieve":
@@ -120,6 +135,9 @@ class AirplaneTypeViewSet(viewsets.ModelViewSet):
 class AirportViewSet(viewsets.ModelViewSet):
     model = Airport
     queryset = Airport.objects.all()
+    ordering_fields = ("id", "name")
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = AirportFilter
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -141,6 +159,9 @@ class AirportViewSet(viewsets.ModelViewSet):
 class AirplaneViewSet(viewsets.ModelViewSet):
     model = Airplane
     queryset = Airplane.objects.all()
+    ordering_fields = ("id", "name")
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = AirplaneFilter
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -177,6 +198,9 @@ class AirplaneViewSet(viewsets.ModelViewSet):
 class RouteViewSet(viewsets.ModelViewSet):
     model = Route
     queryset = Route.objects.all()
+    ordering_fields = ("distance",)
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = RouteFilter
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -199,6 +223,9 @@ class RouteViewSet(viewsets.ModelViewSet):
 class FlightViewSet(viewsets.ModelViewSet):
     model = Flight
     queryset = Flight.objects.all()
+    ordering_fields = ("departure_time", "arrival_time")
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = FlightFilter
 
     def get_serializer_class(self):
         if self.action == "list":
