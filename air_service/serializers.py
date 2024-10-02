@@ -307,6 +307,7 @@ class FlightSerializer(serializers.ModelSerializer):
             attrs["arrival_time"],
             serializers.ValidationError
         )
+        return attrs
 
 
 class FlightListSerializer(FlightSerializer):
