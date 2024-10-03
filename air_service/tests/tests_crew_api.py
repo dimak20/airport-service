@@ -43,7 +43,7 @@ class AuthenticatedCrewApiTests(TestCase):
         )
         self.client.force_authenticate(self.user)
 
-    def test_country_list(self):
+    def test_crew_list(self):
         [sample_crew(
             first_name=f"test{i}",
             last_name=f"test{i + 1}"
@@ -52,6 +52,18 @@ class AuthenticatedCrewApiTests(TestCase):
 
         res = self.client.get(CREW_URL)
         crews = Crew.objects.all()
+        serializer = CrewListSerializer(crews, many=True)
+
+        self.assertEqual(res.data["results"], serializer.data)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+    def test_crew_list_paginated(self):
+        [sample_crew() for _ in range(40)]
+
+        res = self.client.get(CREW_URL, {"page": 2})
+        crews = Crew.objects.filter(
+            id__in=range(31, 41)
+        )
         serializer = CrewListSerializer(crews, many=True)
 
         self.assertEqual(res.data["results"], serializer.data)
