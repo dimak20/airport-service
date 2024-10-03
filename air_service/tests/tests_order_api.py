@@ -7,8 +7,21 @@ from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 
-from air_service.models import Airport, Country, City, Route, AirplaneType, Airplane, Flight, Order, Ticket
-from air_service.serializers import OrderListSerializer, OrderRetrieveSerializer
+from air_service.models import (
+    Airport,
+    Country,
+    City,
+    Route,
+    AirplaneType,
+    Airplane,
+    Flight,
+    Order,
+    Ticket
+)
+from air_service.serializers import (
+    OrderListSerializer,
+    OrderRetrieveSerializer
+)
 
 ORDER_URL = reverse("air-service:order-list")
 
