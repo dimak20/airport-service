@@ -407,6 +407,7 @@ class TicketSerializer(serializers.ModelSerializer):
             "row",
             "seat",
             "flight",
+            "order"
         ]
 
     def validate(self, attrs):
