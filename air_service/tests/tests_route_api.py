@@ -23,7 +23,7 @@ class UnauthenticatedRouteApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
-class AuthenticatedCityApiTests(TestCase):
+class AuthenticatedRouteApiTests(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.country = Country.objects.create(name="America")
@@ -50,7 +50,7 @@ class AuthenticatedCityApiTests(TestCase):
         self.client.force_authenticate(self.user)
 
     def test_route_list(self):
-        [self.sample_route() for i in range(5)]
+        [self.sample_route() for _ in range(5)]
 
         res = self.client.get(ROUTE_URL)
         routes = Route.objects.all()
@@ -166,7 +166,7 @@ class AuthenticatedCityApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
 
 
-class AdminCountryTest(TestCase):
+class AdminRouteTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.country = Country.objects.create(name="America")
