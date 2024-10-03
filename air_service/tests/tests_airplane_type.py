@@ -6,7 +6,10 @@ from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 
 from air_service.models import AirplaneType
-from air_service.serializers import AirplaneTypeSerializer, AirplaneTypeRetrieveSerializer
+from air_service.serializers import (
+    AirplaneTypeSerializer,
+    AirplaneTypeRetrieveSerializer
+)
 
 AIRPLANE_TYPE_URL = reverse("air-service:airplanetype-list")
 
@@ -43,14 +46,17 @@ class AuthenticatedAirplaneTypeApiTests(TestCase):
         )
         self.client.force_authenticate(self.user)
 
-    def test_country_list(self):
+    def test_airplane_type_list(self):
         [sample_airplane_type(name=f"test{i}") for i in range(5)]
 
         res = self.client.get(AIRPLANE_TYPE_URL)
         airplane_types = AirplaneType.objects.annotate(
             airplane_park=Count("airplanes")
         )
-        serializer = AirplaneTypeSerializer(airplane_types, many=True)
+        serializer = AirplaneTypeSerializer(
+            airplane_types,
+            many=True
+        )
 
         self.assertEqual(res.data["results"], serializer.data)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
@@ -83,9 +89,18 @@ class AuthenticatedAirplaneTypeApiTests(TestCase):
             many=True
         )
 
-        self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(serializer_correct_filter.data, res.data["results"])
-        self.assertNotIn(serializer_incorrect_filter.data, res.data["results"])
+        self.assertEqual(
+            res.status_code,
+            status.HTTP_200_OK
+        )
+        self.assertEqual(
+            serializer_correct_filter.data,
+            res.data["results"]
+        )
+        self.assertNotEqual(
+            serializer_incorrect_filter.data,
+            res.data["results"]
+        )
 
     def test_order_airplane_types_by_name(self):
         [sample_airplane_type(name=f"test{i + 1}") for i in range(8)]
@@ -102,7 +117,10 @@ class AuthenticatedAirplaneTypeApiTests(TestCase):
         ordered_airplane_types = AirplaneType.objects.annotate(
             airplane_park=Count("airplanes")
         ).order_by("-name")
-        serializer = AirplaneTypeSerializer(ordered_airplane_types, many=True)
+        serializer = AirplaneTypeSerializer(
+            ordered_airplane_types,
+            many=True
+        )
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data["results"], serializer.data)
