@@ -5,7 +5,6 @@ from django.db.models.functions import TruncHour
 class RouteFilter(django_filters.FilterSet):
     distance_min = django_filters.NumberFilter(field_name="distance", lookup_expr="gte")
     distance_max = django_filters.NumberFilter(field_name="distance", lookup_expr="lte")
-    name = django_filters.CharFilter(field_name="name", lookup_expr="icontains")
     source_city = django_filters.CharFilter(
         field_name="source__closest_big_city__name", lookup_expr="icontains"
     )
