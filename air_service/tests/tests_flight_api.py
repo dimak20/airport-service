@@ -101,6 +101,17 @@ class AuthenticatedFlightApiTests(TestCase):
         self.assertEqual(res.data["results"], serializer.data)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
+    def test_flight_list_paginated(self):
+        [self.sample_flight() for _ in range(40)]
+
+        res = self.client.get(FLIGHT_URL, {"page": 2})
+        flights = self.annotate_flights().filter(
+            id__in=range(31, 41)
+        )
+        serializer = FlightListSerializer(flights, many=True)
+        self.assertEqual(res.data["results"], serializer.data)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
     def test_filter_flights_by_name(self):
         route = Route.objects.create(
             source=self.airport,
