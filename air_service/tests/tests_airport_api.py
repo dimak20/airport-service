@@ -5,7 +5,10 @@ from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 
 from air_service.models import Airport, Country, City
-from air_service.serializers import AirportListSerializer, AirportRetrieveSerializer
+from air_service.serializers import (
+    AirportListSerializer,
+    AirportRetrieveSerializer
+)
 
 AIRPORT_URL = reverse("air-service:airport-list")
 
@@ -14,7 +17,7 @@ def detail_url(airport_id):
     return reverse("air-service:airport-detail", args=(str(airport_id),))
 
 
-class UnauthenticatedRouteApiTests(TestCase):
+class UnauthenticatedAirportApiTests(TestCase):
     def setUp(self):
         self.client = APIClient()
 
@@ -27,9 +30,12 @@ class AuthenticatedAirportApiTests(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.country = Country.objects.create(name="America")
-        cls.city = City.objects.create(name="Smaller America", country=cls.country)
+        cls.city = City.objects.create(
+            name="Smaller America",
+            country=cls.country
+        )
 
-    def sample_airport(self, **params) -> City:
+    def sample_airport(self, **params) -> Airport:
         defaults = {
             "name": "default_name",
             "closest_big_city": self.city,
@@ -111,9 +117,18 @@ class AuthenticatedAirportApiTests(TestCase):
             many=True
         )
 
-        self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(serializer_correct_filter.data, res.data["results"])
-        self.assertNotIn(serializer_incorrect_filter.data, res.data["results"])
+        self.assertEqual(
+            res.status_code,
+            status.HTTP_200_OK
+        )
+        self.assertEqual(
+            serializer_correct_filter.data,
+            res.data["results"]
+        )
+        self.assertNotEqual(
+            serializer_incorrect_filter.data,
+            res.data["results"]
+        )
 
     def test_retrieve_airport_detail(self):
         airport = self.sample_airport()
@@ -137,13 +152,16 @@ class AuthenticatedAirportApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
 
 
-class AdminCountryTest(TestCase):
+class AdminAirportTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.country = Country.objects.create(name="America")
-        cls.city = City.objects.create(name="Smaller America", country=cls.country)
+        cls.city = City.objects.create(
+            name="Smaller America",
+            country=cls.country
+        )
 
-    def sample_airport(self, **params) -> City:
+    def sample_airport(self, **params) -> Airport:
         defaults = {
             "name": "default_name",
             "closest_big_city": self.city,
