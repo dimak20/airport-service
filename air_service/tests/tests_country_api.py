@@ -5,7 +5,10 @@ from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 
 from air_service.models import Country
-from air_service.serializers import CountrySerializer, CountryRetrieveSerializer
+from air_service.serializers import (
+    CountrySerializer,
+    CountryRetrieveSerializer
+)
 
 COUNTRY_URL = reverse("air-service:country-list")
 
@@ -60,12 +63,24 @@ class AuthenticatedCountryApiTests(TestCase):
         )
         incorrect_country = Country.objects.filter(name__exact="test0")
         filtered_countries = Country.objects.filter(name__icontains="filtered")
-        serializer_correct_filter = CountrySerializer(filtered_countries, many=True)
-        serializer_incorrect_filter = CountrySerializer(incorrect_country, many=True)
+        serializer_correct_filter = CountrySerializer(
+            filtered_countries,
+            many=True
+        )
+        serializer_incorrect_filter = CountrySerializer(
+            incorrect_country,
+            many=True
+        )
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(serializer_correct_filter.data, res.data["results"])
-        self.assertNotIn(serializer_incorrect_filter.data, res.data["results"])
+        self.assertEqual(
+            serializer_correct_filter.data,
+            res.data["results"]
+        )
+        self.assertNotEqual(
+            serializer_incorrect_filter.data,
+            res.data["results"]
+        )
 
     def test_order_countries_by_name(self):
         [sample_country(name=f"test{i + 1}") for i in range(8)]
