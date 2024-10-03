@@ -5,7 +5,10 @@ from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 
 from air_service.models import Crew
-from air_service.serializers import CrewListSerializer, CrewRetrieveSerializer
+from air_service.serializers import (
+    CrewListSerializer,
+    CrewRetrieveSerializer
+)
 
 CREW_URL = reverse("air-service:crew-list")
 
@@ -69,12 +72,18 @@ class AuthenticatedCrewApiTests(TestCase):
         )
         incorrect_crew = Crew.objects.filter(first_name__exact="test0")
         filtered_crews = Crew.objects.filter(first_name__icontains="filtered")
-        serializer_correct_filter = CrewListSerializer(filtered_crews, many=True)
-        serializer_incorrect_filter = CrewListSerializer(incorrect_crew, many=True)
+        serializer_correct_filter = CrewListSerializer(
+            filtered_crews,
+            many=True
+        )
+        serializer_incorrect_filter = CrewListSerializer(
+            incorrect_crew,
+            many=True
+        )
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(serializer_correct_filter.data, res.data["results"])
-        self.assertNotIn(serializer_incorrect_filter.data, res.data["results"])
+        self.assertNotEqual(serializer_incorrect_filter.data, res.data["results"])
 
     def test_filter_crew_by_first_and_last_name(self):
         [sample_crew(
@@ -93,14 +102,31 @@ class AuthenticatedCrewApiTests(TestCase):
                 "last_name": "last"
             }
         )
-        incorrect_crew = Crew.objects.filter(first_name__icontains="filtered")
-        filtered_crews = Crew.objects.filter(first_name__icontains="filtered", last_name__icontains="last")
-        serializer_correct_filter = CrewListSerializer(filtered_crews, many=True)
-        serializer_incorrect_filter = CrewListSerializer(incorrect_crew, many=True)
+        incorrect_crew = Crew.objects.filter(
+            first_name__icontains="filtered"
+        )
+        filtered_crews = Crew.objects.filter(
+            first_name__icontains="filtered",
+            last_name__icontains="last"
+        )
+        serializer_correct_filter = CrewListSerializer(
+            filtered_crews,
+            many=True
+        )
+        serializer_incorrect_filter = CrewListSerializer(
+            incorrect_crew,
+            many=True
+        )
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(serializer_correct_filter.data, res.data["results"])
-        self.assertNotIn(serializer_incorrect_filter.data, res.data["results"])
+        self.assertEqual(
+            serializer_correct_filter.data,
+            res.data["results"]
+        )
+        self.assertNotEqual(
+            serializer_incorrect_filter.data,
+            res.data["results"]
+        )
 
     def test_order_crew_by_name(self):
         [sample_crew(
