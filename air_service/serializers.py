@@ -199,7 +199,6 @@ class AirplaneSerializer(serializers.ModelSerializer):
             "name",
             "capacity",
             "airplane_type",
-            "image",
             "rows",
             "seats_in_row"
         ]
@@ -220,6 +219,17 @@ class AirplaneListSerializer(AirplaneSerializer):
         read_only=True,
         many=False
     )
+    class Meta:
+        model = Airplane
+        fields = [
+            "id",
+            "name",
+            "capacity",
+            "airplane_type",
+            "rows",
+            "seats_in_row",
+            "image"
+        ]
 
 
 class AirplaneRetrieveSerializer(AirplaneListSerializer):
