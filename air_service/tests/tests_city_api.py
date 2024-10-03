@@ -5,7 +5,10 @@ from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 
 from air_service.models import Country, City
-from air_service.serializers import CityListSerializer, CityRetrieveSerializer
+from air_service.serializers import (
+    CityListSerializer,
+    CityRetrieveSerializer
+)
 
 CITY_URL = reverse("air-service:city-list")
 
@@ -64,12 +67,24 @@ class AuthenticatedCityApiTests(TestCase):
         )
         incorrect_city = City.objects.filter(name__exact="test0")
         filtered_cities = City.objects.filter(name__icontains="filtered")
-        serializer_correct_filter = CityListSerializer(filtered_cities, many=True)
-        serializer_incorrect_filter = CityListSerializer(incorrect_city, many=True)
+        serializer_correct_filter = CityListSerializer(
+            filtered_cities,
+            many=True
+        )
+        serializer_incorrect_filter = CityListSerializer(
+            incorrect_city,
+            many=True
+        )
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(serializer_correct_filter.data, res.data["results"])
-        self.assertNotIn(serializer_incorrect_filter.data, res.data["results"])
+        self.assertEqual(
+            serializer_correct_filter.data,
+            res.data["results"]
+        )
+        self.assertNotEqual(
+            serializer_incorrect_filter.data,
+            res.data["results"]
+        )
 
     def test_order_cities_by_name(self):
         [self.sample_city(name=f"test{i + 1}") for i in range(8)]
@@ -150,7 +165,7 @@ class AdminCityTest(TestCase):
         self.assertEqual(res.data["name"], city.name)
         self.assertEqual(res.data["country"], self.COUNTRY_SAMPLE.id)
 
-    def test_delete_country(self):
+    def test_delete_city(self):
         city = self.sample_city()
 
         url = detail_url(city.id)
