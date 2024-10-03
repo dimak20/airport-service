@@ -4,8 +4,16 @@ from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 
-from air_service.models import Route, Airport, Country, City
-from air_service.serializers import RouteListSerializer, RouteRetrieveSerializer
+from air_service.models import (
+    Route,
+    Airport,
+    Country,
+    City
+)
+from air_service.serializers import (
+    RouteListSerializer,
+    RouteRetrieveSerializer
+)
 
 ROUTE_URL = reverse("air-service:route-list")
 
@@ -33,7 +41,7 @@ class AuthenticatedRouteApiTests(TestCase):
             closest_big_city=cls.city
         )
 
-    def sample_route(self, **params) -> City:
+    def sample_route(self, **params) -> Route:
         defaults = {
             "source": self.AIRPORT_SAMPLE,
             "destination": self.AIRPORT_SAMPLE,
@@ -70,12 +78,24 @@ class AuthenticatedRouteApiTests(TestCase):
         )
         incorrect_routes = Route.objects.filter(distance__gte=950)
         filtered_routes = Route.objects.filter(distance__gte=1000)
-        serializer_correct_filter = RouteListSerializer(filtered_routes, many=True)
-        serializer_incorrect_filter = RouteListSerializer(incorrect_routes, many=True)
+        serializer_correct_filter = RouteListSerializer(
+            filtered_routes,
+            many=True
+        )
+        serializer_incorrect_filter = RouteListSerializer(
+            incorrect_routes,
+            many=True
+        )
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(serializer_correct_filter.data, res.data["results"])
-        self.assertNotIn(serializer_incorrect_filter.data, res.data["results"])
+        self.assertEqual(
+            serializer_correct_filter.data,
+            res.data["results"]
+        )
+        self.assertNotEqual(
+            serializer_incorrect_filter.data,
+            res.data["results"]
+        )
 
     def test_filter_routes_by_distance_max(self):
         [self.sample_route(distance=950) for _ in range(5)]
@@ -88,16 +108,34 @@ class AuthenticatedRouteApiTests(TestCase):
         )
         incorrect_routes = Route.objects.filter(distance__lte=1001)
         filtered_routes = Route.objects.filter(distance__lte=960)
-        serializer_correct_filter = RouteListSerializer(filtered_routes, many=True)
-        serializer_incorrect_filter = RouteListSerializer(incorrect_routes, many=True)
+        serializer_correct_filter = RouteListSerializer(
+            filtered_routes,
+            many=True
+        )
+        serializer_incorrect_filter = RouteListSerializer(
+            incorrect_routes,
+            many=True
+        )
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(serializer_correct_filter.data, res.data["results"])
-        self.assertNotIn(serializer_incorrect_filter.data, res.data["results"])
+        self.assertEqual(
+            serializer_correct_filter.data,
+            res.data["results"]
+        )
+        self.assertNotIn(
+            serializer_incorrect_filter.data,
+            res.data["results"]
+        )
 
     def test_filter_routes_by_source_city(self):
-        city_1 = City.objects.create(name="city_test_find", country=self.country)
-        airport = Airport.objects.create(name="test_name", closest_big_city=city_1)
+        city_1 = City.objects.create(
+            name="city_test_find",
+            country=self.country
+        )
+        airport = Airport.objects.create(
+            name="test_name",
+            closest_big_city=city_1
+        )
         [self.sample_route(distance=950) for _ in range(5)]
         self.sample_route(source=airport)
         self.sample_route(destination=airport)
@@ -112,16 +150,34 @@ class AuthenticatedRouteApiTests(TestCase):
         filtered_routes = Route.objects.filter(
             source__closest_big_city__name__icontains="find"
         )
-        serializer_correct_filter = RouteListSerializer(filtered_routes, many=True)
-        serializer_incorrect_filter = RouteListSerializer(incorrect_routes, many=True)
+        serializer_correct_filter = RouteListSerializer(
+            filtered_routes,
+            many=True
+        )
+        serializer_incorrect_filter = RouteListSerializer(
+            incorrect_routes,
+            many=True
+        )
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(serializer_correct_filter.data, res.data["results"])
-        self.assertNotIn(serializer_incorrect_filter.data, res.data["results"])
+        self.assertEqual(
+            serializer_correct_filter.data,
+            res.data["results"]
+        )
+        self.assertNotIn(
+            serializer_incorrect_filter.data,
+            res.data["results"]
+        )
 
     def test_filter_routes_by_destination_city(self):
-        city_1 = City.objects.create(name="city_test_find", country=self.country)
-        airport = Airport.objects.create(name="test_name", closest_big_city=city_1)
+        city_1 = City.objects.create(
+            name="city_test_find",
+            country=self.country
+        )
+        airport = Airport.objects.create(
+            name="test_name",
+            closest_big_city=city_1
+        )
         [self.sample_route(distance=950) for _ in range(5)]
         self.sample_route(source=airport)
         self.sample_route(destination=airport)
@@ -136,12 +192,24 @@ class AuthenticatedRouteApiTests(TestCase):
         filtered_routes = Route.objects.filter(
             destination__closest_big_city__name__icontains="find"
         )
-        serializer_correct_filter = RouteListSerializer(filtered_routes, many=True)
-        serializer_incorrect_filter = RouteListSerializer(incorrect_routes, many=True)
+        serializer_correct_filter = RouteListSerializer(
+            filtered_routes,
+            many=True
+        )
+        serializer_incorrect_filter = RouteListSerializer(
+            incorrect_routes,
+            many=True
+        )
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(serializer_correct_filter.data, res.data["results"])
-        self.assertNotIn(serializer_incorrect_filter.data, res.data["results"])
+        self.assertEqual(
+            serializer_correct_filter.data,
+            res.data["results"]
+        )
+        self.assertNotEqual(
+            serializer_incorrect_filter.data,
+            res.data["results"]
+        )
 
     def test_retrieve_route_detail(self):
         route = self.sample_route()
@@ -176,7 +244,7 @@ class AdminRouteTest(TestCase):
             closest_big_city=cls.city
         )
 
-    def sample_route(self, **params) -> City:
+    def sample_route(self, **params) -> Route:
         defaults = {
             "source": self.AIRPORT_SAMPLE,
             "destination": self.AIRPORT_SAMPLE,
