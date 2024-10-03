@@ -114,7 +114,7 @@ class AuthenticatedCityApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
 
 
-class AdminCountryTest(TestCase):
+class AdminCityTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.COUNTRY_SAMPLE = Country.objects.create(name="sample_name")

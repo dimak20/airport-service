@@ -32,7 +32,7 @@ class UnauthenticatedAirplaneApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
-class AuthenticatedCityApiTests(TestCase):
+class AuthenticatedAirplaneApiTests(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.AIRPLANE_TYPE_SAMPLE = AirplaneType.objects.create(name="sample_name")
@@ -243,7 +243,7 @@ class AuthenticatedCityApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
 
 
-class AdminCountryTest(TestCase):
+class AdminAirplaneTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.AIRPLANE_TYPE_SAMPLE = AirplaneType.objects.create(name="sample_name")
