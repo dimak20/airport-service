@@ -294,7 +294,7 @@ class AirplaneViewSet(viewsets.ModelViewSet):
         return queryset.order_by(*ordering_fields)
 
     @action(
-        methods=["POSt"],
+        methods=["POST"],
         detail=True,
         permission_classes=[
             IsAdminUser,
@@ -305,6 +305,7 @@ class AirplaneViewSet(viewsets.ModelViewSet):
         airplane = self.get_object()
         serializer = self.get_serializer(airplane, data=request.data)
         serializer.is_valid(raise_exception=True)
+        serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @extend_schema(
