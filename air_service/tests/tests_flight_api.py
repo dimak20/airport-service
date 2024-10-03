@@ -28,7 +28,7 @@ class UnauthenticatedFlightApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
-class AuthenticatedAirportApiTests(TestCase):
+class AuthenticatedFlightApiTests(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.country = Country.objects.create(name="America")
@@ -70,6 +70,13 @@ class AuthenticatedAirportApiTests(TestCase):
         )
         self.client.force_authenticate(self.user)
 
+    def annotate_flights(self):
+        return Flight.objects.all().annotate(
+            tickets_available=
+            F("airplane__rows") * F("airplane__seats_in_row")
+            - Count("tickets")
+        )
+
     def test_flight_list(self):
         [self.sample_flight() for _ in range(5)]
 
@@ -83,7 +90,7 @@ class AuthenticatedAirportApiTests(TestCase):
         self.assertEqual(res.data["results"], serializer.data)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
-    def test_filter_airports_by_name(self):
+    def test_filter_flights_by_name(self):
         route = Route.objects.create(
             source=self.airport,
             destination=self.airport,
@@ -185,23 +192,13 @@ class AuthenticatedAirportApiTests(TestCase):
             FLIGHT_URL,
             {"departure_time_hour": delta}
         )
-        incorrect_flights = Flight.objects.annotate(
-            tickets_available=
-            F("airplane__rows")
-            * F("airplane__seats_in_row")
-            - Count("tickets")
-        ).annotate(
+        incorrect_flights = self.annotate_flights().annotate(
             departure_hour=TruncHour("departure_time")
         ).filter(
             departure_hour=timezone.now()
         )
 
-        filtered_flights = Flight.objects.annotate(
-            tickets_available=
-            F("airplane__rows")
-            * F("airplane__seats_in_row")
-            - Count("tickets")
-        ).annotate(
+        filtered_flights = self.annotate_flights().annotate(
             departure_hour=TruncHour("departure_time")
         ).filter(
             departure_hour=delta
@@ -232,23 +229,13 @@ class AuthenticatedAirportApiTests(TestCase):
             FLIGHT_URL,
             {"departure_time_hour_after": delta}
         )
-        incorrect_flights = Flight.objects.annotate(
-            tickets_available=
-            F("airplane__rows")
-            * F("airplane__seats_in_row")
-            - Count("tickets")
-        ).annotate(
+        incorrect_flights = self.annotate_flights().annotate(
             departure_hour=TruncHour("departure_time")
         ).filter(
             departure_hour=timezone.now()
         )
 
-        filtered_flights = Flight.objects.annotate(
-            tickets_available=
-            F("airplane__rows")
-            * F("airplane__seats_in_row")
-            - Count("tickets")
-        ).annotate(
+        filtered_flights = self.annotate_flights().annotate(
             departure_hour=TruncHour("departure_time")
         ).filter(
             departure_hour__gte=delta
@@ -279,27 +266,18 @@ class AuthenticatedAirportApiTests(TestCase):
             FLIGHT_URL,
             {"departure_time_hour_before": delta}
         )
-        incorrect_flights = Flight.objects.annotate(
-            tickets_available=
-            F("airplane__rows")
-            * F("airplane__seats_in_row")
-            - Count("tickets")
-        ).annotate(
+        incorrect_flights = self.annotate_flights().annotate(
             departure_hour=TruncHour("departure_time")
         ).filter(
             departure_hour=timezone.now()
         )
 
-        filtered_flights = Flight.objects.annotate(
-            tickets_available=
-            F("airplane__rows")
-            * F("airplane__seats_in_row")
-            - Count("tickets")
-        ).annotate(
+        filtered_flights = self.annotate_flights().annotate(
             departure_hour=TruncHour("departure_time")
         ).filter(
             departure_hour__lte=delta
         )
+
 
         serializer_correct_filter = FlightListSerializer(
             filtered_flights,
@@ -316,11 +294,7 @@ class AuthenticatedAirportApiTests(TestCase):
 
     def test_retrieve_flight_detail(self):
         flight = self.sample_flight()
-        flight_query = Flight.objects.filter(pk=flight.id).annotate(
-            tickets_available=
-            F("airplane__rows") * F("airplane__seats_in_row")
-            - Count("tickets")
-        ).first()
+        flight_query = self.annotate_flights().first()
         url = detail_url(flight.id)
         res = self.client.get(url)
 
@@ -343,7 +317,7 @@ class AuthenticatedAirportApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
 
 
-class AdminCountryTest(TestCase):
+class AdminFlightTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.country = Country.objects.create(name="America")
@@ -424,7 +398,7 @@ class AdminCountryTest(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_delete_airport(self):
+    def test_delete_flight(self):
         route = self.sample_flight()
 
         url = detail_url(route.id)

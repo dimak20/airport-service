@@ -127,7 +127,7 @@ class AuthenticatedAirplaneTypeApiTests(TestCase):
         self.assertEqual(res.data, serializer.data)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
-    def test_create_country_forbidden(self):
+    def test_create_airplane_type_forbidden(self):
         payload = {
             "name": "USA JET (America)"
         }
@@ -160,7 +160,7 @@ class AdminAirplaneTypeTest(TestCase):
         for key in payload:
             self.assertEqual(payload[key], getattr(airplane_type, key))
 
-    def test_delete_country(self):
+    def test_delete_airplane_type(self):
         airplane_type = sample_airplane_type()
 
         url = detail_url(airplane_type.id)
