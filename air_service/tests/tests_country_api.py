@@ -52,6 +52,18 @@ class AuthenticatedCountryApiTests(TestCase):
         self.assertEqual(res.data["results"], serializer.data)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
+    def test_country_list_paginated(self):
+        [sample_country(name=f"test{i}") for i in range(40)]
+
+        res = self.client.get(COUNTRY_URL, {"page": 2})
+        countries = Country.objects.filter(
+            id__in=range(31, 41)
+        )
+        serializer = CountrySerializer(countries, many=True)
+
+        self.assertEqual(res.data["results"], serializer.data)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
     def test_filter_countries_by_name(self):
         [sample_country(name=f"test{i + 1}") for i in range(5)]
         sample_country(name="filtered")
