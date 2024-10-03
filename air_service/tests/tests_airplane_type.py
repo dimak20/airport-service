@@ -61,6 +61,21 @@ class AuthenticatedAirplaneTypeApiTests(TestCase):
         self.assertEqual(res.data["results"], serializer.data)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
+    def test_airplane_type_list_paginated(self):
+        [sample_airplane_type(name=f"test{i}") for i in range(40)]
+
+        res = self.client.get(AIRPLANE_TYPE_URL, {"page": 2})
+        airplane_types = (
+            AirplaneType.objects
+            .filter(id__in=range(31, 41))
+            .annotate(
+                airplane_park=Count("airplanes")
+            )
+        )
+        serializer = AirplaneTypeSerializer(airplane_types, many=True)
+        self.assertEqual(res.data["results"], serializer.data)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
     def test_filter_airplane_types_by_name(self):
         [sample_airplane_type(name=f"test{i + 1}") for i in range(5)]
         sample_airplane_type(name="filtered")
