@@ -9,18 +9,27 @@ from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 
 from air_service.models import Airplane, AirplaneType, Crew
-from air_service.serializers import AirplaneListSerializer, AirplaneRetrieveSerializer
+from air_service.serializers import (
+    AirplaneListSerializer,
+    AirplaneRetrieveSerializer
+)
 
 AIRPLANE_URL = reverse("air-service:airplane-list")
 
 
 def detail_url(airplane_id):
-    return reverse("air-service:airplane-detail", args=(str(airplane_id),))
+    return reverse(
+        "air-service:airplane-detail",
+        args=(str(airplane_id),)
+    )
 
 
 def image_upload_url(airplane_id):
     """Return URL for recipe image upload"""
-    return reverse("air-service:airplane-upload-image", args=(str(airplane_id),))
+    return reverse(
+        "air-service:airplane-upload-image",
+        args=(str(airplane_id),)
+    )
 
 
 class UnauthenticatedAirplaneApiTests(TestCase):
@@ -73,10 +82,20 @@ class AuthenticatedAirplaneApiTests(TestCase):
             AIRPLANE_URL,
             {"search_name": "filtered"}
         )
-        incorrect_airplane = Airplane.objects.filter(name__exact="test0")
-        filtered_airplanes = Airplane.objects.filter(name__icontains="filtered")
-        serializer_correct_filter = AirplaneListSerializer(filtered_airplanes, many=True)
-        serializer_incorrect_filter = AirplaneListSerializer(incorrect_airplane, many=True)
+        incorrect_airplane = Airplane.objects.filter(
+            name__exact="test0"
+        )
+        filtered_airplanes = Airplane.objects.filter(
+            name__icontains="filtered"
+        )
+        serializer_correct_filter = AirplaneListSerializer(
+            filtered_airplanes,
+            many=True
+        )
+        serializer_incorrect_filter = AirplaneListSerializer(
+            incorrect_airplane,
+            many=True
+        )
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(serializer_correct_filter.data, res.data["results"])
@@ -93,8 +112,14 @@ class AuthenticatedAirplaneApiTests(TestCase):
         )
         incorrect_airplane = Airplane.objects.filter(rows__gte=26)
         filtered_airplanes = Airplane.objects.filter(rows__gte=31)
-        serializer_correct_filter = AirplaneListSerializer(filtered_airplanes, many=True)
-        serializer_incorrect_filter = AirplaneListSerializer(incorrect_airplane, many=True)
+        serializer_correct_filter = AirplaneListSerializer(
+            filtered_airplanes,
+            many=True
+        )
+        serializer_incorrect_filter = AirplaneListSerializer(
+            incorrect_airplane,
+            many=True
+        )
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(serializer_correct_filter.data, res.data["results"])
@@ -111,8 +136,14 @@ class AuthenticatedAirplaneApiTests(TestCase):
         )
         incorrect_airplane = Airplane.objects.filter(rows__lte=31)
         filtered_airplanes = Airplane.objects.filter(rows__lte=26)
-        serializer_correct_filter = AirplaneListSerializer(filtered_airplanes, many=True)
-        serializer_incorrect_filter = AirplaneListSerializer(incorrect_airplane, many=True)
+        serializer_correct_filter = AirplaneListSerializer(
+            filtered_airplanes,
+            many=True
+        )
+        serializer_incorrect_filter = AirplaneListSerializer(
+            incorrect_airplane,
+            many=True
+        )
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(serializer_correct_filter.data, res.data["results"])
@@ -129,8 +160,14 @@ class AuthenticatedAirplaneApiTests(TestCase):
         )
         incorrect_airplane = Airplane.objects.filter(seats_in_row__gte=26)
         filtered_airplanes = Airplane.objects.filter(seats_in_row__gte=31)
-        serializer_correct_filter = AirplaneListSerializer(filtered_airplanes, many=True)
-        serializer_incorrect_filter = AirplaneListSerializer(incorrect_airplane, many=True)
+        serializer_correct_filter = AirplaneListSerializer(
+            filtered_airplanes,
+            many=True
+        )
+        serializer_incorrect_filter = AirplaneListSerializer(
+            incorrect_airplane,
+            many=True
+        )
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(serializer_correct_filter.data, res.data["results"])
@@ -147,8 +184,14 @@ class AuthenticatedAirplaneApiTests(TestCase):
         )
         incorrect_airplane = Airplane.objects.filter(seats_in_row__lte=31)
         filtered_airplanes = Airplane.objects.filter(seats_in_row__lte=26)
-        serializer_correct_filter = AirplaneListSerializer(filtered_airplanes, many=True)
-        serializer_incorrect_filter = AirplaneListSerializer(incorrect_airplane, many=True)
+        serializer_correct_filter = AirplaneListSerializer(
+            filtered_airplanes,
+            many=True
+        )
+        serializer_incorrect_filter = AirplaneListSerializer(
+            incorrect_airplane,
+            many=True
+        )
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(serializer_correct_filter.data, res.data["results"])
@@ -165,10 +208,20 @@ class AuthenticatedAirplaneApiTests(TestCase):
             AIRPLANE_URL,
             {"airplane_type_name": "America"}
         )
-        incorrect_airplane = Airplane.objects.filter(airplane_type__name__icontains="Simple")
-        filtered_airplanes = Airplane.objects.filter(airplane_type__name__icontains="America")
-        serializer_correct_filter = AirplaneListSerializer(filtered_airplanes, many=True)
-        serializer_incorrect_filter = AirplaneListSerializer(incorrect_airplane, many=True)
+        incorrect_airplane = Airplane.objects.filter(
+            airplane_type__name__icontains="Simple"
+        )
+        filtered_airplanes = Airplane.objects.filter(
+            airplane_type__name__icontains="America"
+        )
+        serializer_correct_filter = AirplaneListSerializer(
+            filtered_airplanes,
+            many=True
+        )
+        serializer_incorrect_filter = AirplaneListSerializer(
+            incorrect_airplane,
+            many=True
+        )
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(serializer_correct_filter.data, res.data["results"])
@@ -190,8 +243,14 @@ class AuthenticatedAirplaneApiTests(TestCase):
         )
         incorrect_airplane = Airplane.objects.filter(crew__last_name__iexact="John")
         filtered_airplanes = Airplane.objects.filter(crew__last_name__iexact="Doe")
-        serializer_correct_filter = AirplaneListSerializer(filtered_airplanes, many=True)
-        serializer_incorrect_filter = AirplaneListSerializer(incorrect_airplane, many=True)
+        serializer_correct_filter = AirplaneListSerializer(
+            filtered_airplanes,
+            many=True
+        )
+        serializer_incorrect_filter = AirplaneListSerializer(
+            incorrect_airplane,
+            many=True
+        )
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(serializer_correct_filter.data, res.data["results"])
@@ -342,7 +401,11 @@ class AirplaneImageUploadTests(TestCase):
     def test_upload_image_bad_request(self):
         """Test uploading an invalid image"""
         url = image_upload_url(self.airplane.id)
-        res = self.client.post(url, {"image": "not image"}, format="multipart")
+        res = self.client.post(
+            url,
+            {"image": "not image"},
+            format="multipart"
+        )
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
