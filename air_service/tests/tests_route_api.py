@@ -67,6 +67,15 @@ class AuthenticatedRouteApiTests(TestCase):
         self.assertEqual(res.data["results"], serializer.data)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
+    def test_route_list_paginated(self):
+        [self.sample_route() for _ in range(40)]
+
+        res = self.client.get(ROUTE_URL, {"page": 2})
+        routes = Route.objects.all()[30:]
+        serializer = RouteListSerializer(routes, many=True)
+        self.assertEqual(res.data["results"], serializer.data)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
     def test_filter_routes_by_distance_min(self):
         [self.sample_route(distance=950) for _ in range(5)]
         self.sample_route(distance=1000)

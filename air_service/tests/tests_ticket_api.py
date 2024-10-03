@@ -58,8 +58,8 @@ class AuthenticatedTicketApiTests(TestCase):
         )
         cls.airplane = Airplane.objects.create(
             name="ordinary_name",
-            rows=30,
-            seats_in_row=30,
+            rows=130,
+            seats_in_row=130,
             airplane_type=cls.airplane_type,
         )
         cls.flight = Flight.objects.create(
@@ -95,6 +95,15 @@ class AuthenticatedTicketApiTests(TestCase):
 
         res = self.client.get(TICKET_URL)
         tickets = Ticket.objects.all()
+        serializer = TicketListSerializer(tickets, many=True)
+        self.assertEqual(res.data["results"], serializer.data)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+    def test_ticket_list_paginated(self):
+        [self.sample_ticket(row=i + 1, seat=i + 1) for i in range(40)]
+
+        res = self.client.get(TICKET_URL, {"page": 2})
+        tickets = Ticket.objects.all()[30:]
         serializer = TicketListSerializer(tickets, many=True)
         self.assertEqual(res.data["results"], serializer.data)
         self.assertEqual(res.status_code, status.HTTP_200_OK)

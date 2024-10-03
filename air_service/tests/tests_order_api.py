@@ -107,6 +107,17 @@ class AuthenticatedOrderApiTests(TestCase):
         self.assertEqual(res.data["results"], serializer.data)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
+    def test_order_list_paginated(self):
+        [self.sample_order() for _ in range(40)]
+
+        res = self.client.get(ORDER_URL, {"page": 2})
+        orders = Order.objects.filter(
+            id__in=range(31, 41)
+        ).order_by("pk")
+        serializer = OrderListSerializer(orders, many=True)
+        self.assertEqual(res.data["results"], serializer.data)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
     def test_order_list_only_request_user(self):
         user = get_user_model().objects.create(
             email="email@email.com",
