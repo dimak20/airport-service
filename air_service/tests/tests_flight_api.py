@@ -1,7 +1,7 @@
 from datetime import timedelta
 
 from django.contrib.auth import get_user_model
-from django.db.models import F, Count
+from django.db.models import F, Count, QuerySet
 from django.db.models.functions import TruncHour
 from django.test import TestCase
 from django.utils import timezone
@@ -9,8 +9,19 @@ from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 
-from air_service.models import Airport, Country, City, Route, AirplaneType, Airplane, Flight
-from air_service.serializers import FlightRetrieveSerializer, FlightListSerializer
+from air_service.models import (
+    Airport,
+    Country,
+    City,
+    Route,
+    AirplaneType,
+    Airplane,
+    Flight
+)
+from air_service.serializers import (
+    FlightRetrieveSerializer,
+    FlightListSerializer
+)
 
 FLIGHT_URL = reverse("air-service:flight-list")
 
@@ -52,7 +63,7 @@ class AuthenticatedFlightApiTests(TestCase):
             airplane_type=cls.airplane_type,
         )
 
-    def sample_flight(self, **params) -> City:
+    def sample_flight(self, **params) -> Flight:
         defaults = {
             "route": self.route,
             "airplane": self.airplane,
@@ -70,7 +81,7 @@ class AuthenticatedFlightApiTests(TestCase):
         )
         self.client.force_authenticate(self.user)
 
-    def annotate_flights(self):
+    def annotate_flights(self) -> QuerySet:
         return Flight.objects.all().annotate(
             tickets_available=
             F("airplane__rows") * F("airplane__seats_in_row")
@@ -112,14 +123,18 @@ class AuthenticatedFlightApiTests(TestCase):
         incorrect_flights = Flight.objects.filter(
             route__id__in=[self.route.id]
         ).annotate(
-            tickets_available=F("airplane__rows") * F("airplane__seats_in_row")
-                              - Count("tickets")
+            tickets_available=
+            F("airplane__rows")
+            * F("airplane__seats_in_row")
+            - Count("tickets")
         )
         filtered_flights = Flight.objects.filter(
             route__id__in=[route.id, route_2.id]
         ).annotate(
-            tickets_available=F("airplane__rows") * F("airplane__seats_in_row")
-                              - Count("tickets")
+            tickets_available=
+            F("airplane__rows")
+            * F("airplane__seats_in_row")
+            - Count("tickets")
         )
         serializer_correct_filter = FlightListSerializer(
             filtered_flights,
@@ -135,7 +150,7 @@ class AuthenticatedFlightApiTests(TestCase):
             serializer_correct_filter.data,
             res.data["results"]
         )
-        self.assertNotIn(
+        self.assertNotEqual(
             serializer_incorrect_filter.data,
             res.data["results"]
         )
@@ -158,14 +173,18 @@ class AuthenticatedFlightApiTests(TestCase):
         incorrect_flights = Flight.objects.filter(
             airplane__name__icontains=""
         ).annotate(
-            tickets_available=F("airplane__rows") * F("airplane__seats_in_row")
-                              - Count("tickets")
+            tickets_available=
+            F("airplane__rows")
+            * F("airplane__seats_in_row")
+            - Count("tickets")
         )
         filtered_flights = Flight.objects.filter(
             airplane__name__icontains="new"
         ).annotate(
-            tickets_available=F("airplane__rows") * F("airplane__seats_in_row")
-                              - Count("tickets")
+            tickets_available=
+            F("airplane__rows")
+            * F("airplane__seats_in_row")
+            - Count("tickets")
         )
         serializer_correct_filter = FlightListSerializer(
             filtered_flights,
@@ -177,8 +196,14 @@ class AuthenticatedFlightApiTests(TestCase):
         )
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(serializer_correct_filter.data, res.data["results"])
-        self.assertNotIn(serializer_incorrect_filter.data, res.data["results"])
+        self.assertEqual(
+            serializer_correct_filter.data,
+            res.data["results"]
+        )
+        self.assertNotEqual(
+            serializer_incorrect_filter.data,
+            res.data["results"]
+        )
 
     def test_filter_flights_by_departure_time_hour(self):
         delta = timezone.now() + timedelta(hours=1)
@@ -212,10 +237,15 @@ class AuthenticatedFlightApiTests(TestCase):
             incorrect_flights,
             many=True
         )
-
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(serializer_correct_filter.data, res.data["results"])
-        self.assertNotIn(serializer_incorrect_filter.data, res.data["results"])
+        self.assertEqual(
+            serializer_correct_filter.data,
+            res.data["results"]
+        )
+        self.assertNotIn(
+            serializer_incorrect_filter.data,
+            res.data["results"]
+        )
 
     def test_filter_flights_by_departure_time_hour_after(self):
         delta = timezone.now() + timedelta(minutes=5)
@@ -249,10 +279,15 @@ class AuthenticatedFlightApiTests(TestCase):
             incorrect_flights,
             many=True
         )
-
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(serializer_correct_filter.data, res.data["results"])
-        self.assertNotIn(serializer_incorrect_filter.data, res.data["results"])
+        self.assertEqual(
+            serializer_correct_filter.data,
+            res.data["results"]
+        )
+        self.assertNotIn(
+            serializer_incorrect_filter.data,
+            res.data["results"]
+        )
 
     def test_filter_flights_by_departure_time_hour_before(self):
         delta = timezone.now() - timedelta(hours=2)
@@ -278,7 +313,6 @@ class AuthenticatedFlightApiTests(TestCase):
             departure_hour__lte=delta
         )
 
-
         serializer_correct_filter = FlightListSerializer(
             filtered_flights,
             many=True
@@ -289,8 +323,14 @@ class AuthenticatedFlightApiTests(TestCase):
         )
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(serializer_correct_filter.data, res.data["results"])
-        self.assertNotIn(serializer_incorrect_filter.data, res.data["results"])
+        self.assertEqual(
+            serializer_correct_filter.data,
+            res.data["results"]
+        )
+        self.assertNotIn(
+            serializer_incorrect_filter.data,
+            res.data["results"]
+        )
 
     def test_retrieve_flight_detail(self):
         flight = self.sample_flight()
