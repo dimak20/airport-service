@@ -341,7 +341,7 @@ class AdminFlightTest(TestCase):
             airplane_type=cls.airplane_type,
         )
 
-    def sample_flight(self, **params) -> City:
+    def sample_flight(self, **params) -> Flight:
         defaults = {
             "route": self.route,
             "airplane": self.airplane,
