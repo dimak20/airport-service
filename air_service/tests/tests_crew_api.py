@@ -1,14 +1,15 @@
 from django.contrib.auth import get_user_model
-from django.template.defaultfilters import first
 from django.test import TestCase
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 
 from air_service.models import Crew
-from air_service.serializers import CrewSerializer, CrewListSerializer, CrewRetrieveSerializer
+from air_service.serializers import CrewListSerializer, CrewRetrieveSerializer
 
 CREW_URL = reverse("air-service:crew-list")
+
+
 def detail_url(crew_id):
     return reverse("air-service:crew-detail", args=(str(crew_id),))
 
@@ -59,8 +60,8 @@ class AuthenticatedCrewApiTests(TestCase):
             last_name=f"test{i + 1}"
         ) for i in range(5)
         ]
-        sample_crew(first_name="filtered", last_name = "last")
-        sample_crew(first_name="filtered2", last_name = "last")
+        sample_crew(first_name="filtered", last_name="last")
+        sample_crew(first_name="filtered2", last_name="last")
 
         res = self.client.get(
             CREW_URL,
@@ -81,9 +82,9 @@ class AuthenticatedCrewApiTests(TestCase):
             last_name=f"test{i + 1}"
         ) for i in range(5)
         ]
-        sample_crew(first_name="filtered", last_name = "last")
-        sample_crew(first_name="filtered2", last_name = "last")
-        sample_crew(first_name="filtered3", last_name = "no_surname")
+        sample_crew(first_name="filtered", last_name="last")
+        sample_crew(first_name="filtered2", last_name="last")
+        sample_crew(first_name="filtered3", last_name="no_surname")
 
         res = self.client.get(
             CREW_URL,

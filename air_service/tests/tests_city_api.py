@@ -5,13 +5,13 @@ from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 
 from air_service.models import Country, City
-from air_service.serializers import CitySerializer, CityListSerializer, CityRetrieveSerializer
+from air_service.serializers import CityListSerializer, CityRetrieveSerializer
 
 CITY_URL = reverse("air-service:city-list")
 
+
 def detail_url(city_id):
     return reverse("air-service:city-detail", args=(str(city_id),))
-
 
 
 class UnauthenticatedCityApiTests(TestCase):
