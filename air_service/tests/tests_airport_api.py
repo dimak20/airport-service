@@ -60,6 +60,16 @@ class AuthenticatedAirportApiTests(TestCase):
         self.assertEqual(res.data["results"], serializer.data)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
+    def test_airport_list_paginated(self):
+        [self.sample_airport() for _ in range(40)]
+
+        res = self.client.get(AIRPORT_URL, {"page": 2})
+        airports = Airport.objects.all()[30:]
+        serializer = AirportListSerializer(airports, many=True)
+
+        self.assertEqual(res.data["results"], serializer.data)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
     def test_filter_airports_by_name(self):
         [self.sample_airport(name="test_test") for _ in range(5)]
         self.sample_airport(name="America_airport")
