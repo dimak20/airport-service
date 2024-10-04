@@ -205,6 +205,21 @@ class AdminAirportTest(TestCase):
                 continue
             self.assertEqual(payload[key], getattr(airport, key))
 
+    def test_update_airport(self):
+        airport = self.sample_airport()
+        payload = {
+            "name": "America airport"
+        }
+
+        url = detail_url(airport.id)
+
+        res = self.client.patch(url, payload)
+        airport.refresh_from_db()
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(payload["name"], res.data["name"])
+
     def test_delete_airport(self):
         route = self.sample_airport()
 

@@ -193,6 +193,21 @@ class AdminAirplaneTypeTest(TestCase):
         for key in payload:
             self.assertEqual(payload[key], getattr(airplane_type, key))
 
+    def test_update_airplane_type(self):
+        airplane_type = sample_airplane_type()
+        payload = {
+            "name": "America airplane 3"
+        }
+
+        url = detail_url(airplane_type.id)
+
+        res = self.client.patch(url, payload)
+        airplane_type.refresh_from_db()
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(payload["name"], res.data["name"])
+
     def test_delete_airplane_type(self):
         airplane_type = sample_airplane_type()
 
