@@ -212,6 +212,21 @@ class AdminCrewTest(TestCase):
         for key in payload:
             self.assertEqual(payload[key], getattr(crew, key))
 
+    def test_update_crew(self):
+        crew = sample_crew()
+        payload = {
+            "first_name": "American"
+        }
+
+        url = detail_url(crew.id)
+
+        res = self.client.patch(url, payload)
+        crew.refresh_from_db()
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(payload["first_name"], res.data["first_name"])
+
     def test_delete_crew(self):
         crew = sample_crew()
 

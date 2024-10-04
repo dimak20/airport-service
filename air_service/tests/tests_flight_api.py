@@ -436,6 +436,23 @@ class AdminFlightTest(TestCase):
                 continue
             self.assertEqual(payload[key], getattr(flight, key))
 
+    def test_update_flight(self):
+        flight = self.sample_flight()
+        payload = {
+            "departure_time": timezone.now() + timedelta(days=1),
+            "arrival_time": timezone.now() + timedelta(days=3)
+        }
+
+        url = detail_url(flight.id)
+
+        res = self.client.patch(url, payload)
+        flight.refresh_from_db()
+        expected_arrival_time = payload["arrival_time"].isoformat().replace("+00:00", "Z")
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(expected_arrival_time, res.data["arrival_time"])
+
     def test_create_flight_incorrect_data(self):
         payload = {
             "route": self.route.id,
