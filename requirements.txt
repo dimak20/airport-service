@@ -19,6 +19,7 @@ pillow==10.4.0
 platformdirs==4.3.6
 psycopg==3.2.3
 psycopg-binary==3.2.3
+psycopg2==2.9.9
 PyJWT==2.9.0
 PyYAML==6.0.2
 referencing==0.35.1
