@@ -105,9 +105,7 @@ class AuthenticatedFlightApiTests(TestCase):
         [self.sample_flight() for _ in range(40)]
 
         res = self.client.get(FLIGHT_URL, {"page": 2})
-        flights = self.annotate_flights().filter(
-            id__in=range(31, 41)
-        )
+        flights = self.annotate_flights().order_by("id")[30:40]
         serializer = FlightListSerializer(flights, many=True)
         self.assertEqual(res.data["results"], serializer.data)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
@@ -173,7 +171,7 @@ class AuthenticatedFlightApiTests(TestCase):
             seats_in_row=456,
             airplane_type=self.airplane_type
         )
-        [self.sample_flight() for _ in range(5)]
+        [self.sample_flight() for _ in range(2)]
         self.sample_flight(airplane=airplane)
         self.sample_flight(airplane=airplane)
 
@@ -188,7 +186,7 @@ class AuthenticatedFlightApiTests(TestCase):
             F("airplane__rows")
             * F("airplane__seats_in_row")
             - Count("tickets")
-        )
+        ).order_by("id")
         filtered_flights = Flight.objects.filter(
             airplane__name__icontains="new"
         ).annotate(
@@ -196,7 +194,7 @@ class AuthenticatedFlightApiTests(TestCase):
             F("airplane__rows")
             * F("airplane__seats_in_row")
             - Count("tickets")
-        )
+        ).order_by("id")
         serializer_correct_filter = FlightListSerializer(
             filtered_flights,
             many=True
@@ -205,7 +203,6 @@ class AuthenticatedFlightApiTests(TestCase):
             incorrect_flights,
             many=True
         )
-
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(
             serializer_correct_filter.data,
@@ -304,25 +301,24 @@ class AuthenticatedFlightApiTests(TestCase):
         delta = timezone.now() - timedelta(hours=2)
         [self.sample_flight() for _ in range(5)]
         self.sample_flight(departure_time=delta)
-        self.sample_flight(
-            departure_time=delta + timedelta(minutes=3)
-        )
+        self.sample_flight(departure_time=delta + timedelta(minutes=3))
 
         res = self.client.get(
             FLIGHT_URL,
             {"departure_time_hour_before": delta}
         )
+
         incorrect_flights = self.annotate_flights().annotate(
             departure_hour=TruncHour("departure_time")
         ).filter(
-            departure_hour=timezone.now()
-        )
+            departure_hour__gt=delta
+        ).order_by("id")
 
         filtered_flights = self.annotate_flights().annotate(
             departure_hour=TruncHour("departure_time")
         ).filter(
             departure_hour__lte=delta
-        )
+        ).order_by("id")
 
         serializer_correct_filter = FlightListSerializer(
             filtered_flights,

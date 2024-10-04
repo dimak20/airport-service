@@ -52,7 +52,7 @@ class AuthenticatedAirplaneTypeApiTests(TestCase):
         res = self.client.get(AIRPLANE_TYPE_URL)
         airplane_types = AirplaneType.objects.annotate(
             airplane_park=Count("airplanes")
-        )
+        ).order_by("id")
         serializer = AirplaneTypeSerializer(
             airplane_types,
             many=True
@@ -67,10 +67,9 @@ class AuthenticatedAirplaneTypeApiTests(TestCase):
         res = self.client.get(AIRPLANE_TYPE_URL, {"page": 2})
         airplane_types = (
             AirplaneType.objects
-            .filter(id__in=range(31, 41))
             .annotate(
                 airplane_park=Count("airplanes")
-            )
+            ).order_by("id")[30:40]
         )
         serializer = AirplaneTypeSerializer(airplane_types, many=True)
         self.assertEqual(res.data["results"], serializer.data)

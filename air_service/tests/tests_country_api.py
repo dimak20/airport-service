@@ -56,9 +56,7 @@ class AuthenticatedCountryApiTests(TestCase):
         [sample_country(name=f"test{i}") for i in range(40)]
 
         res = self.client.get(COUNTRY_URL, {"page": 2})
-        countries = Country.objects.filter(
-            id__in=range(31, 41)
-        )
+        countries = Country.objects.order_by("id")[30:40]
         serializer = CountrySerializer(countries, many=True)
 
         self.assertEqual(res.data["results"], serializer.data)

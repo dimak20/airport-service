@@ -112,8 +112,7 @@ class AuthenticatedOrderApiTests(TestCase):
 
         res = self.client.get(ORDER_URL, {"page": 2})
         orders = Order.objects.filter(
-            id__in=range(31, 41)
-        ).order_by("pk")
+        ).order_by("pk")[30:40]
         serializer = OrderListSerializer(orders, many=True)
         self.assertEqual(res.data["results"], serializer.data)
         self.assertEqual(res.status_code, status.HTTP_200_OK)

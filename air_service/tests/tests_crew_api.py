@@ -61,9 +61,7 @@ class AuthenticatedCrewApiTests(TestCase):
         [sample_crew() for _ in range(40)]
 
         res = self.client.get(CREW_URL, {"page": 2})
-        crews = Crew.objects.filter(
-            id__in=range(31, 41)
-        )
+        crews = Crew.objects.order_by("id")[30:40]
         serializer = CrewListSerializer(crews, many=True)
 
         self.assertEqual(res.data["results"], serializer.data)
