@@ -420,7 +420,6 @@ class AirplaneImageUploadTests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertIn("image", res.data)
-        print(self.airplane.image.path)
         self.assertTrue(os.path.exists(self.airplane.image.path))
 
     def test_upload_image_bad_request(self):
