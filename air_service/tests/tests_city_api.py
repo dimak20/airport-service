@@ -175,6 +175,21 @@ class AdminCityTest(TestCase):
         self.assertEqual(res.data["name"], city.name)
         self.assertEqual(res.data["country"], self.COUNTRY_SAMPLE.id)
 
+    def test_update_city(self):
+        city = self.sample_city()
+        payload = {
+            "name": "America city"
+        }
+
+        url = detail_url(city.id)
+
+        res = self.client.patch(url, payload)
+        city.refresh_from_db()
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(payload["name"], res.data["name"])
+
     def test_delete_city(self):
         city = self.sample_city()
 

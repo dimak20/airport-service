@@ -160,6 +160,21 @@ class AdminCountryTest(TestCase):
         for key in payload:
             self.assertEqual(payload[key], getattr(country, key))
 
+    def test_update_country(self):
+        country = sample_country()
+        payload = {
+            "name": "Americaaa"
+        }
+
+        url = detail_url(country.id)
+
+        res = self.client.patch(url, payload)
+        country.refresh_from_db()
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(payload["name"], res.data["name"])
+
     def test_delete_country(self):
         country = sample_country()
 
