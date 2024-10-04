@@ -289,6 +289,21 @@ class AdminRouteTest(TestCase):
                 continue
             self.assertEqual(payload[key], getattr(route, key))
 
+    def test_update_route(self):
+        route = self.sample_route()
+        payload = {
+            "distance": 1200
+        }
+
+        url = detail_url(route.id)
+
+        res = self.client.patch(url, payload)
+        route.refresh_from_db()
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(payload["distance"], res.data["distance"])
+
     def test_delete_route(self):
         route = self.sample_route()
 

@@ -169,6 +169,23 @@ class AuthenticatedOrderApiTests(TestCase):
         self.assertEqual(res.data, serializer.data)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
+    def test_create_order(self):
+        ticket_data = {
+            "row": 10,
+            "seat": 10,
+            "flight": self.flight.id
+        }
+        payload = {
+            "user": self.user.id,
+            "tickets": [ticket_data]
+        }
+
+        res = self.client.post(ORDER_URL, payload, format="json")
+        order = Order.objects.get(id=res.data["id"])
+
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(order.tickets.count(), 1)
+
     def test_delete_order(self):
         order = self.sample_order()
 
