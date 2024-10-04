@@ -21,10 +21,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-#3e1ddmnz#q87)0@m9ih7q5e4#v%8um+b@p*zdih*ueqj^g@_x"
+SECRET_KEY = os.environ.get(
+    "DJANGO_SECRET_KEY",
+    "django-insecure-#3e1ddmnz#q87)0@m9ih7q5e4#v%8um+b@p*zdih*ueqj^g@_x"
+
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get(
+    "DJANGO_DEBUG",
+    True
+)
 
 ALLOWED_HOSTS = []
 
@@ -140,9 +147,13 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
-MEDIA_ROOT = BASE_DIR / "media"
+if DATABASE_ENGINE == "postgresql":
+    MEDIA_ROOT = "/files/media"
 
-MEDIA_URL = "/files/media/"
+else:
+    MEDIA_ROOT = BASE_DIR / "media"
+
+MEDIA_URL = "/media/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
