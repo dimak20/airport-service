@@ -6,5 +6,7 @@ from air_service.models import Airplane
 
 @receiver(pre_delete, sender=Airplane)
 def delete_avatar(sender, instance, **kwargs):
-    if os.path.isfile(instance.image.path):
-        os.remove(instance.image.path)
+    image = instance.image
+    if image and hasattr(image, "path"):
+        if os.path.isfile(image.path):
+            os.remove(image.path)
