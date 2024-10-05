@@ -227,3 +227,16 @@ Project
 * Airport Endpoints: Retrieve and manage airport information.
 * User Endpoints: User registration, login, and token authentication.
 * Hint - use http://localhost:8000/api/v1/doc/swagger/ to see all endpoints
+
+## Features
+* JWT Authentication
+* Admin panel /admin/
+* Swagger documentation
+* Managing orders and tickets
+* Creating countries, cities, flights, routes, crews, airplanes, airplane types, airports
+* Creaing orders and tickets 
+* Filtering and ordering all models by name, distance etc.
+* Celery usage for background tasks
+* Redis usage for caching
+* Prometheus usage for service monitoring
+* Grafana for visualizing server usage
