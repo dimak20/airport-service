@@ -1,4 +1,5 @@
 from django.db.models import Count, F
+from django.http import JsonResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, status
@@ -60,6 +61,7 @@ from air_service.serializers import (
     OrderRetrieveSerializer,
     AirplaneImageSerializer,
 )
+from air_service.tasks import add
 
 
 class CountryViewSet(viewsets.ModelViewSet):
@@ -499,3 +501,7 @@ class OrderViewSet(viewsets.ModelViewSet):
     )
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
+
+def add_view(request):
+    result = add.delay(4, 6)
+    return JsonResponse({"task_id": result.id})
