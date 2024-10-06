@@ -48,7 +48,7 @@ python manage.py migrate
 ```
 5. (Optional) Also you can load fixture data
 ```shell
-python manage.py loaddata air_data.json
+python manage.py loaddata data.json
 ```
 
 
@@ -88,11 +88,12 @@ USE_REDIS=fale
 docker-compose -f docker-compose.yaml up --build
 ```
 
-4. (Optionally) Create super user inside docker container
+4. (Optionally) Create super user inside docker container and load data
 
 ```shell
 docker exec -it <your_container_name> sh
 python manage.py createsuperuser
+python manage.py loaddata data.json
 ```
 You can find out container name by the command "docker ps" -> your air_service id
 
@@ -135,11 +136,12 @@ SENDGRID_API_KEY=your_secret_key
 docker-compose -f docker-compose.monitoring.yml up --build
 ```
 
-4. (Optionally) Create super user inside docker container
+4. (Optionally) Create super user inside docker container and load data
 
 ```shell
 docker exec -it <your_container_name> sh
 python manage.py createsuperuser
+python manage.py loaddata data.json
 ```
 You can find out container name by the command "docker ps" -> your air_service id
 

@@ -1,0 +1,830 @@
+[
+{
+  "model": "air_service.country",
+  "pk": 2,
+  "fields": {
+    "name": "Germany"
+  }
+},
+{
+  "model": "air_service.country",
+  "pk": 3,
+  "fields": {
+    "name": "Italy"
+  }
+},
+{
+  "model": "air_service.country",
+  "pk": 4,
+  "fields": {
+    "name": "The United Kingdom"
+  }
+},
+{
+  "model": "air_service.country",
+  "pk": 6,
+  "fields": {
+    "name": "The Usa"
+  }
+},
+{
+  "model": "air_service.country",
+  "pk": 7,
+  "fields": {
+    "name": "Japan"
+  }
+},
+{
+  "model": "air_service.country",
+  "pk": 8,
+  "fields": {
+    "name": "Ukraine"
+  }
+},
+{
+  "model": "air_service.country",
+  "pk": 9,
+  "fields": {
+    "name": "Spain"
+  }
+},
+{
+  "model": "air_service.country",
+  "pk": 10,
+  "fields": {
+    "name": "Brazil"
+  }
+},
+{
+  "model": "air_service.country",
+  "pk": 11,
+  "fields": {
+    "name": "Israel"
+  }
+},
+{
+  "model": "air_service.country",
+  "pk": 12,
+  "fields": {
+    "name": "Argentina"
+  }
+},
+{
+  "model": "air_service.country",
+  "pk": 13,
+  "fields": {
+    "name": "South Korea"
+  }
+},
+{
+  "model": "air_service.country",
+  "pk": 14,
+  "fields": {
+    "name": "China"
+  }
+},
+{
+  "model": "air_service.country",
+  "pk": 15,
+  "fields": {
+    "name": "Canada"
+  }
+},
+{
+  "model": "air_service.country",
+  "pk": 16,
+  "fields": {
+    "name": "Poland"
+  }
+},
+{
+  "model": "air_service.country",
+  "pk": 17,
+  "fields": {
+    "name": "Finland"
+  }
+},
+{
+  "model": "air_service.city",
+  "pk": 1,
+  "fields": {
+    "name": "Berlin",
+    "country": 2
+  }
+},
+{
+  "model": "air_service.city",
+  "pk": 2,
+  "fields": {
+    "name": "Milan",
+    "country": 3
+  }
+},
+{
+  "model": "air_service.city",
+  "pk": 4,
+  "fields": {
+    "name": "London",
+    "country": 4
+  }
+},
+{
+  "model": "air_service.city",
+  "pk": 5,
+  "fields": {
+    "name": "String",
+    "country": 2
+  }
+},
+{
+  "model": "air_service.city",
+  "pk": 6,
+  "fields": {
+    "name": "Buenos aires",
+    "country": 12
+  }
+},
+{
+  "model": "air_service.city",
+  "pk": 7,
+  "fields": {
+    "name": "Brasilia",
+    "country": 10
+  }
+},
+{
+  "model": "air_service.city",
+  "pk": 8,
+  "fields": {
+    "name": "Toronto",
+    "country": 15
+  }
+},
+{
+  "model": "air_service.city",
+  "pk": 9,
+  "fields": {
+    "name": "Beijing",
+    "country": 14
+  }
+},
+{
+  "model": "air_service.city",
+  "pk": 10,
+  "fields": {
+    "name": "Helsinki",
+    "country": 17
+  }
+},
+{
+  "model": "air_service.city",
+  "pk": 11,
+  "fields": {
+    "name": "Jerusalem",
+    "country": 11
+  }
+},
+{
+  "model": "air_service.city",
+  "pk": 12,
+  "fields": {
+    "name": "Tokyo",
+    "country": 7
+  }
+},
+{
+  "model": "air_service.city",
+  "pk": 13,
+  "fields": {
+    "name": "Warsaw",
+    "country": 16
+  }
+},
+{
+  "model": "air_service.city",
+  "pk": 14,
+  "fields": {
+    "name": "Seul",
+    "country": 13
+  }
+},
+{
+  "model": "air_service.city",
+  "pk": 15,
+  "fields": {
+    "name": "Madrid",
+    "country": 9
+  }
+},
+{
+  "model": "air_service.city",
+  "pk": 16,
+  "fields": {
+    "name": "Barcelona",
+    "country": 9
+  }
+},
+{
+  "model": "air_service.city",
+  "pk": 17,
+  "fields": {
+    "name": "Washington",
+    "country": 6
+  }
+},
+{
+  "model": "air_service.city",
+  "pk": 18,
+  "fields": {
+    "name": "Kiyv",
+    "country": 8
+  }
+},
+{
+  "model": "air_service.city",
+  "pk": 20,
+  "fields": {
+    "name": "Odessa",
+    "country": 8
+  }
+},
+{
+  "model": "air_service.crew",
+  "pk": 1,
+  "fields": {
+    "first_name": "John",
+    "last_name": "Doe"
+  }
+},
+{
+  "model": "air_service.crew",
+  "pk": 2,
+  "fields": {
+    "first_name": "Jane",
+    "last_name": "Dou"
+  }
+},
+{
+  "model": "air_service.airplanetype",
+  "pk": 1,
+  "fields": {
+    "name": "Jumbo jet"
+  }
+},
+{
+  "model": "air_service.airplanetype",
+  "pk": 3,
+  "fields": {
+    "name": "Test"
+  }
+},
+{
+  "model": "air_service.airplanetype",
+  "pk": 4,
+  "fields": {
+    "name": "Cargo airplanes"
+  }
+},
+{
+  "model": "air_service.airplanetype",
+  "pk": 5,
+  "fields": {
+    "name": "Widebodies"
+  }
+},
+{
+  "model": "air_service.airplanetype",
+  "pk": 6,
+  "fields": {
+    "name": "Narrowbodies"
+  }
+},
+{
+  "model": "air_service.airplanetype",
+  "pk": 7,
+  "fields": {
+    "name": "Private jets"
+  }
+},
+{
+  "model": "air_service.airplanetype",
+  "pk": 8,
+  "fields": {
+    "name": "Heavy jets"
+  }
+},
+{
+  "model": "air_service.airplanetype",
+  "pk": 9,
+  "fields": {
+    "name": "Mid-size jets"
+  }
+},
+{
+  "model": "air_service.airplanetype",
+  "pk": 10,
+  "fields": {
+    "name": "Light jets"
+  }
+},
+{
+  "model": "air_service.airplanetype",
+  "pk": 11,
+  "fields": {
+    "name": "Very light jets"
+  }
+},
+{
+  "model": "air_service.airplanetype",
+  "pk": 12,
+  "fields": {
+    "name": "Propeller planes"
+  }
+},
+{
+  "model": "air_service.airport",
+  "pk": 1,
+  "fields": {
+    "name": "Tegel",
+    "closest_big_city": 1
+  }
+},
+{
+  "model": "air_service.airport",
+  "pk": 2,
+  "fields": {
+    "name": "Gatvik",
+    "closest_big_city": 4
+  }
+},
+{
+  "model": "air_service.airport",
+  "pk": 3,
+  "fields": {
+    "name": "test",
+    "closest_big_city": 1
+  }
+},
+{
+  "model": "air_service.airport",
+  "pk": 4,
+  "fields": {
+    "name": "test-2",
+    "closest_big_city": 1
+  }
+},
+{
+  "model": "air_service.airport",
+  "pk": 5,
+  "fields": {
+    "name": "el Prat",
+    "closest_big_city": 16
+  }
+},
+{
+  "model": "air_service.airport",
+  "pk": 6,
+  "fields": {
+    "name": "Daxing",
+    "closest_big_city": 9
+  }
+},
+{
+  "model": "air_service.airport",
+  "pk": 7,
+  "fields": {
+    "name": "Brasilia",
+    "closest_big_city": 7
+  }
+},
+{
+  "model": "air_service.airport",
+  "pk": 8,
+  "fields": {
+    "name": "Mesta",
+    "closest_big_city": 6
+  }
+},
+{
+  "model": "air_service.airport",
+  "pk": 9,
+  "fields": {
+    "name": "Vantaa",
+    "closest_big_city": 10
+  }
+},
+{
+  "model": "air_service.airport",
+  "pk": 10,
+  "fields": {
+    "name": "Jerusalem",
+    "closest_big_city": 11
+  }
+},
+{
+  "model": "air_service.airport",
+  "pk": 11,
+  "fields": {
+    "name": "Borispol",
+    "closest_big_city": 18
+  }
+},
+{
+  "model": "air_service.airport",
+  "pk": 12,
+  "fields": {
+    "name": "Barajas",
+    "closest_big_city": 15
+  }
+},
+{
+  "model": "air_service.airport",
+  "pk": 13,
+  "fields": {
+    "name": "Malpensa",
+    "closest_big_city": 2
+  }
+},
+{
+  "model": "air_service.airport",
+  "pk": 14,
+  "fields": {
+    "name": "ODS",
+    "closest_big_city": 20
+  }
+},
+{
+  "model": "air_service.airport",
+  "pk": 15,
+  "fields": {
+    "name": "Jimpo",
+    "closest_big_city": 14
+  }
+},
+{
+  "model": "air_service.airport",
+  "pk": 16,
+  "fields": {
+    "name": "Narita",
+    "closest_big_city": 12
+  }
+},
+{
+  "model": "air_service.airport",
+  "pk": 17,
+  "fields": {
+    "name": "Billy Bishop",
+    "closest_big_city": 8
+  }
+},
+{
+  "model": "air_service.airport",
+  "pk": 18,
+  "fields": {
+    "name": "Lotnisko Chopina w Warszawie",
+    "closest_big_city": 13
+  }
+},
+{
+  "model": "air_service.airport",
+  "pk": 19,
+  "fields": {
+    "name": "Dalles",
+    "closest_big_city": 17
+  }
+},
+{
+  "model": "air_service.airplane",
+  "pk": 1,
+  "fields": {
+    "name": "Boeing 777",
+    "rows": 40,
+    "seats_in_row": 8,
+    "airplane_type": 1,
+    "image": "upload/airplanes/boeing-777-ec6d1b9f-8f20-4c3e-8882-971c612d601f.jpg",
+    "crew": [
+      1
+    ]
+  }
+},
+{
+  "model": "air_service.airplane",
+  "pk": 2,
+  "fields": {
+    "name": "test2",
+    "rows": 3,
+    "seats_in_row": 3,
+    "airplane_type": 3,
+    "image": "upload/airplanes/test2-3d4ff801-7a51-4e3b-aa67-677781e83596.jpg",
+    "crew": [
+      1
+    ]
+  }
+},
+{
+  "model": "air_service.airplane",
+  "pk": 3,
+  "fields": {
+    "name": "Boeing 747",
+    "rows": 30,
+    "seats_in_row": 20,
+    "airplane_type": 1,
+    "image": "",
+    "crew": []
+  }
+},
+{
+  "model": "air_service.airplane",
+  "pk": 4,
+  "fields": {
+    "name": "Boeing 747-8F",
+    "rows": 10,
+    "seats_in_row": 10,
+    "airplane_type": 4,
+    "image": "",
+    "crew": []
+  }
+},
+{
+  "model": "air_service.airplane",
+  "pk": 5,
+  "fields": {
+    "name": "Airbus A350",
+    "rows": 30,
+    "seats_in_row": 30,
+    "airplane_type": 5,
+    "image": "",
+    "crew": []
+  }
+},
+{
+  "model": "air_service.airplane",
+  "pk": 6,
+  "fields": {
+    "name": "Airbus A320",
+    "rows": 15,
+    "seats_in_row": 15,
+    "airplane_type": 6,
+    "image": "",
+    "crew": []
+  }
+},
+{
+  "model": "air_service.route",
+  "pk": 1,
+  "fields": {
+    "source": 1,
+    "destination": 2,
+    "distance": 1100
+  }
+},
+{
+  "model": "air_service.route",
+  "pk": 2,
+  "fields": {
+    "source": 1,
+    "destination": 1,
+    "distance": 1000
+  }
+},
+{
+  "model": "air_service.route",
+  "pk": 3,
+  "fields": {
+    "source": 2,
+    "destination": 5,
+    "distance": 1186
+  }
+},
+{
+  "model": "air_service.route",
+  "pk": 4,
+  "fields": {
+    "source": 7,
+    "destination": 8,
+    "distance": 1722
+  }
+},
+{
+  "model": "air_service.route",
+  "pk": 5,
+  "fields": {
+    "source": 13,
+    "destination": 17,
+    "distance": 6637
+  }
+},
+{
+  "model": "air_service.route",
+  "pk": 6,
+  "fields": {
+    "source": 18,
+    "destination": 15,
+    "distance": 7732
+  }
+},
+{
+  "model": "air_service.flight",
+  "pk": 1,
+  "fields": {
+    "route": 1,
+    "airplane": 1,
+    "departure_time": "2024-10-02T14:24:00Z",
+    "arrival_time": "2024-10-23T14:24:00Z"
+  }
+},
+{
+  "model": "air_service.flight",
+  "pk": 2,
+  "fields": {
+    "route": 1,
+    "airplane": 1,
+    "departure_time": "2024-10-02T15:59:24.967Z",
+    "arrival_time": "2024-10-03T15:59:24.967Z"
+  }
+},
+{
+  "model": "air_service.flight",
+  "pk": 3,
+  "fields": {
+    "route": 2,
+    "airplane": 1,
+    "departure_time": "2024-10-02T15:59:24.967Z",
+    "arrival_time": "2024-10-03T15:59:24.967Z"
+  }
+},
+{
+  "model": "air_service.flight",
+  "pk": 4,
+  "fields": {
+    "route": 1,
+    "airplane": 1,
+    "departure_time": "2024-10-06T12:35:00Z",
+    "arrival_time": "2024-10-07T10:35:00Z"
+  }
+},
+{
+  "model": "air_service.flight",
+  "pk": 5,
+  "fields": {
+    "route": 5,
+    "airplane": 5,
+    "departure_time": "2024-10-10T13:31:00Z",
+    "arrival_time": "2024-10-11T02:31:00Z"
+  }
+},
+{
+  "model": "air_service.flight",
+  "pk": 6,
+  "fields": {
+    "route": 4,
+    "airplane": 5,
+    "departure_time": "2024-10-07T17:00:00Z",
+    "arrival_time": "2024-10-07T22:00:00Z"
+  }
+},
+{
+  "model": "air_service.ticket",
+  "pk": 1,
+  "fields": {
+    "row": 1,
+    "seat": 1,
+    "flight": 1,
+    "order": 1,
+    "notification_sent": false
+  }
+},
+{
+  "model": "air_service.ticket",
+  "pk": 2,
+  "fields": {
+    "row": 2,
+    "seat": 2,
+    "flight": 1,
+    "order": 2,
+    "notification_sent": false
+  }
+},
+{
+  "model": "air_service.ticket",
+  "pk": 3,
+  "fields": {
+    "row": 3,
+    "seat": 4,
+    "flight": 1,
+    "order": 3,
+    "notification_sent": false
+  }
+},
+{
+  "model": "air_service.ticket",
+  "pk": 4,
+  "fields": {
+    "row": 1,
+    "seat": 1,
+    "flight": 4,
+    "order": 4,
+    "notification_sent": false
+  }
+},
+{
+  "model": "air_service.order",
+  "pk": 1,
+  "fields": {
+    "created_at": "2024-10-01T11:26:19.333Z",
+    "user": 1
+  }
+},
+{
+  "model": "air_service.order",
+  "pk": 2,
+  "fields": {
+    "created_at": "2024-10-01T15:59:01.782Z",
+    "user": 1
+  }
+},
+{
+  "model": "air_service.order",
+  "pk": 3,
+  "fields": {
+    "created_at": "2024-10-03T22:03:55.776Z",
+    "user": 1
+  }
+},
+{
+  "model": "air_service.order",
+  "pk": 4,
+  "fields": {
+    "created_at": "2024-10-06T10:37:37.691Z",
+    "user": 4
+  }
+},
+{
+  "model": "user.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$870000$b1jodk6khcwjPhinEvQfpi$4ZZofmOQnF9EWDRBHWBRUiAvJReWlnRf9Srsj9frz6A=",
+    "last_login": "2024-10-03T14:07:09.955Z",
+    "is_superuser": true,
+    "first_name": "admin",
+    "last_name": "admin",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2024-10-01T11:26:12.507Z",
+    "email": "admin@gmail.com",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "user.user",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$870000$GVwXBHKAu4a4xB0NKnlxmu$QqyANECbfCIlB5B08LmqFmc00Fnt1IhfEDHy4e0HCjs=",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "string",
+    "last_name": "string",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2024-10-05T11:51:21.001Z",
+    "email": "user@example.com",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "user.user",
+  "pk": 4,
+  "fields": {
+    "password": "pbkdf2_sha256$870000$8MOecfqlvPtpgaaypZ8BLI$+twAYr2uGJMDmHcaboo8rUS1DAxEWit0LWpQkdpef4Y=",
+    "last_login": null,
+    "is_superuser": true,
+    "first_name": "",
+    "last_name": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2024-10-06T09:09:55.128Z",
+    "email": "dima@gmail.com",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "user.user",
+  "pk": 5,
+  "fields": {
+    "password": "pbkdf2_sha256$870000$vO9ozOdOhg5FP7JrAutRbO$Hgwgnm6ppBvHpB5lZh4ru/+tsjypJrC+QpyHUp5Zv7g=",
+    "last_login": null,
+    "is_superuser": true,
+    "first_name": "",
+    "last_name": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2024-10-06T13:54:52.409Z",
+    "email": "admin_test@gmail.com",
+    "groups": [],
+    "user_permissions": []
+  }
+}
+]
