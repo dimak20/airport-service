@@ -271,13 +271,13 @@ class AuthenticatedFlightApiTests(TestCase):
             departure_hour=TruncHour("departure_time")
         ).filter(
             departure_hour=timezone.now()
-        )
+        ).order_by("id")
 
         filtered_flights = self.annotate_flights().annotate(
             departure_hour=TruncHour("departure_time")
         ).filter(
             departure_hour__gte=delta
-        )
+        ).order_by("id")
 
         serializer_correct_filter = FlightListSerializer(
             filtered_flights,

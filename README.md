@@ -124,6 +124,8 @@ REDIS_PORT=6379
 DATABASE_URL=postgresql://airport:airport@db:5432/airport
 CELERY_BROKER_URL=redis://redis:6379/0
 USE_REDIS=true
+DEFAULT_FROM_EMAIL=example@mail.com
+SENDGRID_API_KEY=your_secret_key
 ```
 
 3. Build and run docker containers 
@@ -149,6 +151,7 @@ You can find out container name by the command "docker ps" -> your air_service i
 ```shell
 Prometheus: http://localhost:9090
 Grafana: http://localhost:3000
+Beat scheduler: http://localhost:8000/admin/ -> tasks
 ```
 
 ### Project configuration
@@ -240,3 +243,4 @@ Project
 * Redis usage for caching
 * Prometheus usage for service monitoring
 * Grafana for visualizing server usage
+* Beat for scheduling background tasks
