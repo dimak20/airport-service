@@ -50,7 +50,9 @@ python manage.py migrate
 ```shell
 python manage.py loaddata data.json
 ```
+email: admin_test@gmail.com
 
+password: test_password
 
 6. And finally, create superuser and run server
 
@@ -95,6 +97,10 @@ docker exec -it <your_container_name> sh
 python manage.py createsuperuser
 python manage.py loaddata data.json
 ```
+email: admin_test@gmail.com
+
+password: test_password
+
 You can find out container name by the command "docker ps" -> your air_service id
 
 5. Access the API at http://localhost:8000/api/v1/
@@ -143,6 +149,10 @@ docker exec -it <your_container_name> sh
 python manage.py createsuperuser
 python manage.py loaddata data.json
 ```
+email: admin_test@gmail.com
+
+password: test_password
+
 You can find out container name by the command "docker ps" -> your air_service id
 
 
