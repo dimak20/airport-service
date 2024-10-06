@@ -38,7 +38,9 @@ def send_ticket_reminders():
             message_content = (
                 f"Your plane takes off at "
                 f"{ticket.flight.departure_time.strftime('%Y-%m-%d %H:%M')}. "
-                f"Ticket number: {ticket.id}."
+                f"Ticket number: {ticket.id}.\n"
+                f"Row: {ticket.row}, seat: {ticket.seat}. "
+                f"Airplane: {ticket.flight.airplane.name}."
             )
 
             send_email(subject, message_content, ticket.order.user.email)
