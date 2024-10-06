@@ -38,6 +38,7 @@ class City(models.Model):
     class Meta:
         ordering = ["name", "country__name"]
         verbose_name_plural = "cities"
+        unique_together = ["name", "country"]
 
     def save(
             self,
