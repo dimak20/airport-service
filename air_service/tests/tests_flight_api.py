@@ -1,5 +1,5 @@
-from datetime import timedelta
-
+from datetime import timedelta, timezone as dt_timezone, datetime
+import pytz
 from django.contrib.auth import get_user_model
 from django.db.models import F, Count, QuerySet
 from django.db.models.functions import TruncHour
@@ -443,11 +443,13 @@ class AdminFlightTest(TestCase):
 
         res = self.client.patch(url, payload)
         flight.refresh_from_db()
-        expected_arrival_time = payload["arrival_time"].isoformat().replace("+00:00", "Z")
+
+
+        expected_arrival_time = payload["arrival_time"].astimezone(dt_timezone.utc)
+        res_arrival_time = datetime.fromisoformat(res.data["arrival_time"].replace("Z", "+00:00")).astimezone(dt_timezone.utc)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-
-        self.assertEqual(expected_arrival_time, res.data["arrival_time"])
+        self.assertEqual(expected_arrival_time, res_arrival_time)
 
     def test_create_flight_incorrect_data(self):
         payload = {
