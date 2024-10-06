@@ -164,6 +164,7 @@ You can find out container name by the command "docker ps" -> your air_service i
 Prometheus: http://localhost:9090
 Grafana: http://localhost:3000
 Beat scheduler: http://localhost:8000/admin/ -> tasks
+Flower: http://localhost:5555
 ```
 
 ### Project configuration
