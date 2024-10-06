@@ -55,10 +55,24 @@ services:
       context: .
     env_file:
       - .env
-    command: celery -A airport_api_service worker --loglevel=info
+    command: >
+      sh -c "celery -A airport_api_service worker --loglevel=info &
+              celery -A airport_api_service beat --loglevel=info"
     depends_on:
       - db
       - redis
+    networks:
+      - monitoring
+
+  celerybeat:
+    build: .
+    user: my_user
+    command: [ "celery", "-A", "airport_api_service", "beat", "--loglevel=info", "--scheduler", "django_celery_beat.schedulers:DatabaseScheduler" ]
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+      - db
     networks:
       - monitoring
 
