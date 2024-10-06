@@ -184,6 +184,7 @@ class Ticket(models.Model):
     seat = models.PositiveIntegerField()
     flight = models.ForeignKey(Flight, on_delete=CASCADE, related_name="tickets")
     order = models.ForeignKey("Order", on_delete=CASCADE, related_name="tickets")
+    notification_sent = models.BooleanField(default=False, blank=True)
 
     class Meta:
         constraints = [
