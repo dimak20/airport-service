@@ -104,7 +104,7 @@ class CountryViewSet(viewsets.ModelViewSet):
 
 class CityViewSet(viewsets.ModelViewSet):
     model = City
-    queryset = City.objects.all()
+    queryset = City.objects.select_related()
     ordering_fields = ("pk", "name")
     filter_backends = (DjangoFilterBackend,)
     filterset_class = CityFilter
@@ -226,7 +226,7 @@ class AirplaneTypeViewSet(viewsets.ModelViewSet):
 
 class AirportViewSet(viewsets.ModelViewSet):
     model = Airport
-    queryset = Airport.objects.all()
+    queryset = Airport.objects.select_related()
     ordering_fields = ("pk", "name")
     filter_backends = (DjangoFilterBackend,)
     filterset_class = AirportFilter
@@ -267,7 +267,7 @@ class AirportViewSet(viewsets.ModelViewSet):
 
 class AirplaneViewSet(viewsets.ModelViewSet):
     model = Airplane
-    queryset = Airplane.objects.all()
+    queryset = Airplane.objects.select_related()
     ordering_fields = ("pk", "name")
     filter_backends = (DjangoFilterBackend,)
     filterset_class = AirplaneFilter
@@ -328,7 +328,7 @@ class AirplaneViewSet(viewsets.ModelViewSet):
 
 class RouteViewSet(viewsets.ModelViewSet):
     model = Route
-    queryset = Route.objects.all()
+    queryset = Route.objects.select_related()
     ordering_fields = ("pk", "distance")
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RouteFilter
@@ -370,7 +370,7 @@ class RouteViewSet(viewsets.ModelViewSet):
 
 class FlightViewSet(viewsets.ModelViewSet):
     model = Flight
-    queryset = Flight.objects.all()
+    queryset = Flight.objects.select_related()
     ordering_fields = ("pk", "departure_time", "arrival_time")
     filter_backends = (DjangoFilterBackend,)
     filterset_class = FlightFilter
@@ -416,7 +416,7 @@ class TicketViewSet(viewsets.ModelViewSet):
     model = Ticket
     serializer_class = TicketSerializer
     ordering_fields = ("pk",)
-    queryset = Ticket.objects.all()
+    queryset = Ticket.objects.select_related()
     permission_classes = [
         IsAuthenticated,
     ]
@@ -459,7 +459,7 @@ class OrderViewSet(viewsets.ModelViewSet):
     model = Order
     serializer_class = OrderSerializer
     ordering_fields = ("pk",)
-    queryset = Order.objects.all()
+    queryset = Order.objects.select_related()
     permission_classes = [
         IsAuthenticated,
     ]

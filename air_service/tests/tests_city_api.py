@@ -57,10 +57,10 @@ class AuthenticatedCityApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
     def test_city_list_paginated(self):
-        [self.sample_city() for _ in range(40)]
+        [self.sample_city(name=f"{i}") for i in range(40)]
 
         res = self.client.get(CITY_URL, {"page": 2})
-        cities = City.objects.all()[30:]
+        cities = City.objects.all().order_by("id")[30:]
         serializer = CityListSerializer(cities, many=True)
 
         self.assertEqual(res.data["results"], serializer.data)
