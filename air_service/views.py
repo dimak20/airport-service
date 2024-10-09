@@ -1,5 +1,7 @@
 from django.db.models import Count, F
 from django.http import JsonResponse
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, status
@@ -88,6 +90,7 @@ class CountryViewSet(viewsets.ModelViewSet):
 
         return queryset.order_by(*ordering_fields)
 
+    @method_decorator(cache_page(60 * 15))
     @extend_schema(
         parameters=[
             OpenApiParameter(
@@ -129,6 +132,7 @@ class CityViewSet(viewsets.ModelViewSet):
 
         return queryset.order_by(*ordering_fields)
 
+    @method_decorator(cache_page(60 * 15))
     @extend_schema(
         parameters=[
             OpenApiParameter(
@@ -170,6 +174,7 @@ class CrewViewSet(viewsets.ModelViewSet):
 
         return queryset.order_by(*ordering_fields)
 
+    @method_decorator(cache_page(60 * 15))
     @extend_schema(
         parameters=[
             OpenApiParameter(
@@ -210,6 +215,7 @@ class AirplaneTypeViewSet(viewsets.ModelViewSet):
 
         return queryset.order_by(*ordering_fields)
 
+    @method_decorator(cache_page(60 * 15))
     @extend_schema(
         parameters=[
             OpenApiParameter(
@@ -251,6 +257,7 @@ class AirportViewSet(viewsets.ModelViewSet):
 
         return queryset.order_by(*ordering_fields)
 
+    @method_decorator(cache_page(60 * 15))
     @extend_schema(
         parameters=[
             OpenApiParameter(
@@ -312,6 +319,7 @@ class AirplaneViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @method_decorator(cache_page(60 * 15))
     @extend_schema(
         parameters=[
             OpenApiParameter(
@@ -354,6 +362,7 @@ class RouteViewSet(viewsets.ModelViewSet):
 
         return queryset.order_by(*ordering_fields)
 
+    @method_decorator(cache_page(60 * 15))
     @extend_schema(
         parameters=[
             OpenApiParameter(
@@ -398,6 +407,7 @@ class FlightViewSet(viewsets.ModelViewSet):
 
         return queryset.order_by(*ordering_fields)
 
+    @method_decorator(cache_page(60 * 15))
     @extend_schema(
         parameters=[
             OpenApiParameter(
@@ -441,6 +451,7 @@ class TicketViewSet(viewsets.ModelViewSet):
 
         return TicketSerializer
 
+    @method_decorator(cache_page(60 * 15))
     @extend_schema(
         parameters=[
             OpenApiParameter(
@@ -489,6 +500,7 @@ class OrderViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+    @method_decorator(cache_page(60 * 15))
     @extend_schema(
         parameters=[
             OpenApiParameter(
