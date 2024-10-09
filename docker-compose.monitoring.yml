@@ -7,6 +7,7 @@ volumes:
   my_media:
   prometheus_data: {}
   grafana-data: {}
+  movie_db_pgadmin_data:
 
 services:
   air_service:
@@ -47,6 +48,19 @@ services:
       timeout: 60s
       retries: 5
 
+  pgadmin:
+    image: dpage/pgadmin4
+    ports:
+      - "3333:80"
+    env_file:
+      - .env
+    depends_on:
+      - db
+    networks:
+      - monitoring
+    volumes:
+      - movie_db_pgadmin_data:/var/lib/pgadmin
+
   redis:
     image: redis:7.0
     container_name: redis
@@ -61,6 +75,7 @@ services:
       interval: 30s
       timeout: 60s
       retries: 5
+    restart: always
 
   redis-admin:
     image: rediscommander/redis-commander:latest
