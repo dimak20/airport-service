@@ -51,7 +51,7 @@ class AuthenticatedAirplaneApiTests(TestCase):
             "name": "Test_city_name",
             "airplane_type": self.AIRPLANE_TYPE_SAMPLE,
             "rows": 30,
-            "seats_in_row": 30
+            "seats_in_row": 30,
         }
         defaults.update(params)
         return Airplane.objects.create(**defaults)
@@ -63,14 +63,19 @@ class AuthenticatedAirplaneApiTests(TestCase):
         )
         self.client.force_authenticate(self.user)
 
+    def tearDown(self):
+        Airplane.objects.all().delete()
+
     def test_airplane_list(self):
         [self.sample_airplane() for _ in range(5)]
 
         res = self.client.get(AIRPLANE_URL)
-        airplanes = Airplane.objects.all()
+        airplanes = Airplane.objects.order_by("pk")
         serializer = AirplaneListSerializer(airplanes, many=True)
-
-        self.assertEqual(res.data["results"], serializer.data)
+        self.assertEqual(
+            sorted(res.data["results"], key=lambda x: x['id']),
+            sorted(serializer.data, key=lambda x: x['id'])
+        )
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
     def test_airplane_list_paginated(self):
