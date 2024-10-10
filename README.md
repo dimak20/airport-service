@@ -165,6 +165,8 @@ Prometheus: http://localhost:9090
 Grafana: http://localhost:3000
 Beat scheduler: http://localhost:8000/admin/ -> tasks
 Flower: http://localhost:5555
+PGAdmin: http://localhost:3333
+Redis-command: http://localhost:8081
 ```
 
 ### Project configuration
