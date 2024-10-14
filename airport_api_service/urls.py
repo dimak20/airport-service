@@ -20,7 +20,6 @@ from django.conf.urls.static import static
 
 from django.contrib import admin
 from django.urls import path, include
-from django_prometheus import exports
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularSwaggerView,
@@ -29,8 +28,8 @@ from drf_spectacular.views import (
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/v1/air_service/", include("air_service.urls", namespace="air-service")),
-    path("api/v1/user/", include("user.urls", namespace="users")),
+    path("api/v1/air_services/", include("air_service.urls", namespace="air-service")),
+    path("api/v1/users/", include("user.urls", namespace="users")),
     path("api/v1/schema/", SpectacularAPIView.as_view(), name="schema"),
     path(
         "api/v1/doc/swagger/",
