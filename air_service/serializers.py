@@ -40,15 +40,13 @@ class CitySerializer(serializers.ModelSerializer):
 class CityListSerializer(CitySerializer):
     country = SlugRelatedField(
         slug_field="name",
-        many=False,
         read_only=True
     )
 
 
-class CityRetrieveSerializer(serializers.ModelSerializer):
+class CityRetrieveSerializer(CitySerializer):
     country = SlugRelatedField(
         slug_field="name",
-        many=False,
         read_only=True
     )
     airports = SlugRelatedField(
@@ -80,7 +78,6 @@ class AirportSerializer(serializers.ModelSerializer):
 class AirportListSerializer(AirportSerializer):
     closest_big_city = serializers.SlugRelatedField(
         read_only=True,
-        many=False,
         slug_field="name"
     )
 
@@ -102,12 +99,10 @@ class AirportRetrieveSerializer(AirportListSerializer):
             "same_city_airports"
         ]
 
-    def get_same_city_airports(self, obj) -> list[str]:
-        return [
-            airport.name for airport in Airport.objects.filter(
-                closest_big_city=obj.id
-            ).exclude(id=obj.id)
-        ]
+    def get_same_city_airports(self, obj: Airport) -> list[str]:
+        return Airport.objects.filter(
+            closest_big_city_id=obj.closest_big_city_id
+        ).exclude(id=obj.id).values_list("name", flat=True)
 
 
 class CountryRetrieveSerializer(serializers.ModelSerializer):
@@ -217,8 +212,8 @@ class AirplaneListSerializer(AirplaneSerializer):
     airplane_type = serializers.SlugRelatedField(
         slug_field="name",
         read_only=True,
-        many=False
     )
+
     class Meta:
         model = Airplane
         fields = [
@@ -283,11 +278,9 @@ class RouteListSerializer(RouteSerializer):
 
 class RouteRetrieveSerializer(RouteListSerializer):
     source = serializers.StringRelatedField(
-        many=False,
         read_only=True,
     )
     destination = serializers.StringRelatedField(
-        many=False,
         read_only=True,
     )
 
@@ -327,7 +320,6 @@ class FlightListSerializer(FlightSerializer):
     arrival_time = serializers.SerializerMethodField()
     route = serializers.StringRelatedField(
         read_only=True,
-        many=False
     )
     airplane = serializers.CharField(
         read_only=True,
@@ -377,13 +369,7 @@ class FlightRetrieveSerializer(FlightListSerializer):
         return f"{obj.airplane.name} ({obj.airplane.airplane_type.name})"
 
     def get_tickets(self, obj) -> list[dict[str, Any]]:
-        return [
-            {
-                "seat": ticket.seat,
-                "row": ticket.row
-            }
-            for ticket in obj.tickets.all()
-        ]
+        return list(obj.tickets.all().values("seat", "row"))
 
 
 class FlightDetailSerializer(FlightRetrieveSerializer):
@@ -421,11 +407,11 @@ class TicketSerializer(serializers.ModelSerializer):
 
 
 class TicketListSerializer(TicketSerializer):
-    flight = FlightListSerializer(many=False, read_only=True)
+    flight = FlightListSerializer(read_only=True)
 
 
 class TicketRetrieveSerializer(TicketSerializer):
-    flight = FlightDetailSerializer(many=False, read_only=True)
+    flight = FlightDetailSerializer(read_only=True)
 
 
 class OrderSerializer(serializers.ModelSerializer):
