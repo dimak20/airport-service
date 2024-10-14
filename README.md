@@ -41,9 +41,8 @@ venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-4. You need to make migrations
+4. You need to migrate
 ```shell
-python manage.py makemigrations
 python manage.py migrate
 ```
 5. (Optional) Also you can load fixture data
@@ -80,7 +79,7 @@ PGDATA=/var/lib/postgresql/data/pgdata
 DJANGO_SECRET_KEY=your_secret_key
 DJANGO_DEBUG=true
 DATABASE_URL=postgresql://airport:airport@db:5432/airport
-USE_REDIS=fale
+USE_REDIS=false
 ```
 
 3. Build and run docker containers 
@@ -252,7 +251,7 @@ Project
 * Swagger documentation
 * Managing orders and tickets
 * Creating countries, cities, flights, routes, crews, airplanes, airplane types, airports
-* Creaing orders and tickets 
+* Creating orders and tickets 
 * Filtering and ordering all models by name, distance etc.
 * Celery usage for background tasks
 * Redis usage for caching
