@@ -15,17 +15,10 @@ class Country(models.Model):
         ordering = ["name"]
         verbose_name_plural = "countries"
 
-    def save(
-            self,
-            *args,
-            force_insert=False,
-            force_update=False,
-            using=None,
-            update_fields=None,
-    ):
-        self.name = " ".join([word.lower().capitalize() for word in self.name.split()])
+    def save(self, *args, **kwargs):
+        self.name = " ".join([word.capitalize() for word in self.name.split()])
         self.full_clean()
-        return super().save(force_insert, force_update, using, update_fields)
+        return super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         return self.name
@@ -38,19 +31,14 @@ class City(models.Model):
     class Meta:
         ordering = ["name", "country__name"]
         verbose_name_plural = "cities"
-        unique_together = ["name", "country"]
+        constraints = [
+            models.UniqueConstraint(fields=["name", "country"], name="unique_city_country")
+        ]
 
-    def save(
-            self,
-            *args,
-            force_insert=False,
-            force_update=False,
-            using=None,
-            update_fields=None,
-    ):
-        self.name = self.name.lower().capitalize()
+    def save(self, *args, **kwargs):
+        self.name = self.name.capitalize()
         self.full_clean()
-        return super().save(force_insert, force_update, using, update_fields)
+        return super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         return f"{self.name} ({self.country.name})"
@@ -71,17 +59,10 @@ class Crew(models.Model):
 class AirplaneType(models.Model):
     name = models.CharField(max_length=255, unique=True)
 
-    def save(
-            self,
-            *args,
-            force_insert=False,
-            force_update=False,
-            using=None,
-            update_fields=None,
-    ):
-        self.name = self.name.lower().capitalize()
+    def save(self, *args, **kwargs, ):
+        self.name = self.name.capitalize()
         self.full_clean()
-        return super().save(force_insert, force_update, using, update_fields)
+        return super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         return self.name.capitalize()
@@ -230,21 +211,18 @@ class Ticket(models.Model):
                 }
             )
 
-    def save(
-            self,
-            *args,
-            force_insert=False,
-            force_update=False,
-            using=None,
-            update_fields=None,
-    ):
+    def save(self, *args, **kwargs):
         self.full_clean()
-        return super(Ticket, self).save(force_insert, force_update, using, update_fields)
+        return super(Ticket, self).save(*args, **kwargs)
 
 
 class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=CASCADE)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=CASCADE,
+        related_name="orders"
+    )
 
     class Meta:
         ordering = ["-created_at"]
