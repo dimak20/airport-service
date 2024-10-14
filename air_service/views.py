@@ -1,5 +1,4 @@
 from django.db.models import Count, F
-from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django_filters.rest_framework import DjangoFilterBackend
@@ -63,7 +62,6 @@ from air_service.serializers import (
     OrderRetrieveSerializer,
     AirplaneImageSerializer,
 )
-from air_service.tasks import add
 
 
 class CountryViewSet(viewsets.ModelViewSet):
@@ -80,7 +78,7 @@ class CountryViewSet(viewsets.ModelViewSet):
         return CountrySerializer
 
     def get_queryset(self):
-        queryset = self.queryset
+        queryset = super().get_queryset()
         if self.action in ["list", "retrieve"]:
             queryset = queryset.select_related()
 
@@ -122,7 +120,7 @@ class CityViewSet(viewsets.ModelViewSet):
         return CitySerializer
 
     def get_queryset(self):
-        queryset = self.queryset
+        queryset = super().get_queryset()
         if self.action in ["list", "retrieve"]:
             queryset = queryset.select_related()
 
@@ -164,7 +162,7 @@ class CrewViewSet(viewsets.ModelViewSet):
         return CrewSerializer
 
     def get_queryset(self):
-        queryset = self.queryset
+        queryset = super().get_queryset()
         if self.action in ["list", "retrieve"]:
             queryset = queryset.prefetch_related("airplanes")
 
@@ -203,8 +201,8 @@ class AirplaneTypeViewSet(viewsets.ModelViewSet):
         return AirplaneTypeSerializer
 
     def get_queryset(self):
-        queryset = self.queryset
-        if self.action == "list" or self.action == "retrieve":
+        queryset = super().get_queryset()
+        if self.action in ["list", "retrieve"]:
             queryset = queryset.select_related().annotate(
                 airplane_park=Count("airplanes")
             )
@@ -247,8 +245,8 @@ class AirportViewSet(viewsets.ModelViewSet):
         return AirportSerializer
 
     def get_queryset(self):
-        queryset = self.queryset
-        if self.action == "list" or self.action == "retrieve":
+        queryset = super().get_queryset()
+        if self.action in ["list", "retrieve"]:
             queryset = queryset.select_related()
 
         ordering_fields = AirServiceOrdering.get_ordering_fields(
@@ -292,7 +290,7 @@ class AirplaneViewSet(viewsets.ModelViewSet):
         return AirplaneSerializer
 
     def get_queryset(self):
-        queryset = self.queryset
+        queryset = super().get_queryset()
         if self.action in ["list", "retrieve"]:
             queryset = queryset.select_related().prefetch_related("crew")
 
@@ -351,7 +349,7 @@ class RouteViewSet(viewsets.ModelViewSet):
         return RouteSerializer
 
     def get_queryset(self):
-        queryset = self.queryset
+        queryset = super().get_queryset()
 
         if self.action in ["list", "retrieve"]:
             queryset = queryset.select_related()
@@ -394,10 +392,12 @@ class FlightViewSet(viewsets.ModelViewSet):
         return FlightSerializer
 
     def get_queryset(self):
-        queryset = self.queryset
+        queryset = super().get_queryset()
         if self.action in ["list", "retrieve"]:
             queryset = queryset.select_related().annotate(
-                tickets_available=F("airplane__rows") * F("airplane__seats_in_row")
+                tickets_available=
+                F("airplane__rows")
+                * F("airplane__seats_in_row")
                 - Count("tickets")
             )
 
@@ -513,7 +513,3 @@ class OrderViewSet(viewsets.ModelViewSet):
     )
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
-
-def add_view(request):
-    result = add.delay(4, 6)
-    return JsonResponse({"task_id": result.id})
