@@ -14,6 +14,8 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
+from sendgrid import SendGridAPIClient
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -63,9 +65,9 @@ MIDDLEWARE = [
 ]
 
 MIDDLEWARE = (
-    ["django_prometheus.middleware.PrometheusBeforeMiddleware"]
-    + MIDDLEWARE
-    + ["django_prometheus.middleware.PrometheusAfterMiddleware"]
+        ["django_prometheus.middleware.PrometheusBeforeMiddleware"]
+        + MIDDLEWARE
+        + ["django_prometheus.middleware.PrometheusAfterMiddleware"]
 )
 
 ROOT_URLCONF = "airport_api_service.urls"
@@ -230,3 +232,9 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=3),
     "ROTATE_REFRESH_TOKENS": False,
 }
+
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
+
+SENDGRID_API_KEY = os.environ.get("SENDGRID_API_KEY")
+
+SENDGRID_CLIENT = SendGridAPIClient(SENDGRID_API_KEY)

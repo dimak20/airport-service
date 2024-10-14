@@ -12,11 +12,6 @@ logger = logging.getLogger(__name__)
 
 
 @shared_task
-def add(x: int = 1, y: int = 1):
-    return x + y
-
-
-@shared_task
 def send_ticket_reminders():
     reminder_time = timezone.now() + timedelta(hours=3)
 

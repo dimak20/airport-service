@@ -12,7 +12,6 @@ from air_service.views import (
     TicketViewSet,
     OrderViewSet,
     AirplaneTypeViewSet,
-    add_view
 )
 
 app_name = "air-service"
@@ -31,5 +30,4 @@ router.register("orders", OrderViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),
-    path("celery_test/", add_view, name="celery-test")
 ]
