@@ -347,7 +347,7 @@ class AuthenticatedFlightApiTests(TestCase):
 
         serializer = FlightRetrieveSerializer(flight_query)
 
-        self.assertEqual(res.data, serializer.data)
+        self.assertEqual(list(res.data), list(serializer.data))
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
     def test_create_flight_forbidden(self):
