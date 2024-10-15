@@ -213,7 +213,7 @@ class Ticket(models.Model):
 
     def save(self, *args, **kwargs):
         self.full_clean()
-        return super(Ticket, self).save(*args, **kwargs)
+        return super().save(*args, **kwargs)
 
 
 class Order(models.Model):
