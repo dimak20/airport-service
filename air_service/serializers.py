@@ -369,7 +369,7 @@ class FlightRetrieveSerializer(FlightListSerializer):
         return f"{obj.airplane.name} ({obj.airplane.airplane_type.name})"
 
     def get_tickets(self, obj) -> list[dict[str, Any]]:
-        return list(obj.tickets.all().values("seat", "row"))
+        return obj.tickets.values_list("seat", "row")
 
 
 class FlightDetailSerializer(FlightRetrieveSerializer):
@@ -415,7 +415,7 @@ class TicketRetrieveSerializer(TicketSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    tickets = TicketSerializer(many=True, read_only=False, allow_empty=False)
+    tickets = TicketSerializer(many=True)
 
     class Meta:
         model = Order
